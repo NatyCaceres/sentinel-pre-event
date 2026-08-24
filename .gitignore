@@ -1,0 +1,31 @@
+# ENTORNO PYTHON
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# ARCHIVOS TEMPORALES / CACHÉ
+.pytest_cache/
+.mypy_cache/
+*.log
+
+# JUPYTER
+.ipynb_checkpoints/
+
+# CONFIGURACIÓN LOCAL / SECRETOS
+.env
+.streamlit/secrets.toml
+
+# DATOS PESADOS SENTINEL-2
+*.tif
+*.tiff
+
+# MODELOS PESADOS
+*.pt
+*.pth
+*.ckpt
+
+# SISTEMA OPERATIVO
+.DS_Store
+Thumbs.db
