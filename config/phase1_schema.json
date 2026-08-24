@@ -1,0 +1,81 @@
+{
+    "schema_version": "1.0.0",
+
+    "dataset_type": "phase1_clean_metadata",
+
+    "required_columns": [
+        "patch_id",
+        "group_id",
+        "etiqueta",
+        "lat_centro",
+        "lon_centro",
+        "season_year",
+        "banda_lat",
+        "fecha_referencia",
+        "fecha_objetivo_pre_evento",
+        "gee_inicio",
+        "gee_fin",
+        "spatial_block",
+        "split",
+        "event_weight"
+    ],
+
+    "identifier_columns": {
+        "patch_id": {
+            "unique": true,
+            "nullable": false
+        },
+        "group_id": {
+            "unique": false,
+            "nullable": false
+        }
+    },
+
+    "classes": {
+        "column": "etiqueta",
+        "allowed_values": [
+            0,
+            1
+        ]
+    },
+
+    "coordinates": {
+        "latitude_column": "lat_centro",
+        "longitude_column": "lon_centro",
+        "study_area": {
+            "lat_min": -43.0,
+            "lat_max": -33.0,
+            "lon_min": -74.0,
+            "lon_max": -69.0
+        }
+    },
+
+    "dates": {
+        "columns": [
+            "fecha_referencia",
+            "fecha_objetivo_pre_evento",
+            "gee_inicio",
+            "gee_fin"
+        ],
+        "pre_event_min_days": 89,
+        "pre_event_max_days": 93
+    },
+
+    "split": {
+        "column": "split",
+        "allowed_values": [
+            "train",
+            "test"
+        ],
+        "leakage_keys": [
+            "group_id",
+            "spatial_block"
+        ]
+    },
+
+    "weights": {
+        "column": "event_weight",
+        "minimum_exclusive": 0.0,
+        "maximum_inclusive": 1.0
+    }
+}
