@@ -1,0 +1,29 @@
+{
+    "dataset_id": "phase1_clean_2018_2025_ecc68b98",
+    "dataset_type": "phase1_clean_metadata",
+    "schema_version": "1.0.0",
+    "file_name": "phase1_clean.csv",
+    "sha256": "ECC68B989F3A1CDA0ED8D4EF21EE6BB39A3AA7E81A684378D5C745E68472CF51",
+    "statistics": {
+        "rows": 1338,
+        "columns": 14,
+        "unique_patches": 1338,
+        "unique_groups": 1294,
+        "multipatch_groups": 14,
+        "class_distribution": {
+            "0": 669,
+            "1": 669
+        },
+        "split_distribution": {
+            "train": 1071,
+            "test": 267
+        },
+        "season_min": 2018,
+        "season_max": 2025
+    },
+    "validation": {
+        "is_valid": true,
+        "errors": [],
+        "warnings": []
+    }
+}
