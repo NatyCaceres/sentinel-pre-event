@@ -57,7 +57,7 @@
             "gee_inicio",
             "gee_fin"
         ],
-        "pre_event_min_days": 89,
+        "pre_event_min_days": 1,
         "pre_event_max_days": 93
     },
 
