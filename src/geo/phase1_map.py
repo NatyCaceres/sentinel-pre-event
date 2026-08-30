@@ -145,6 +145,18 @@ def build_map_points(
         "es_multipatch",
     ]
 
+    optional_columns = [
+        "CUT_COM",
+        "COMUNA",
+        "PROVINCIA",
+        "REGION",
+        "administrative_status",
+    ]
+
+    for column in optional_columns:
+        if column in points.columns:
+            output_columns.append(column)
+
     return (
         points[output_columns]
         .reset_index(drop=True)
