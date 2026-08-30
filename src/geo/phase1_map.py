@@ -7,12 +7,11 @@ import pandas as pd
 
 def format_season_label(season_year: int) -> str:
     """
-    Convierte el identificador interno de una temporada
-    en una etiqueta legible para la interfaz.
+    Convierte el identificador interno de temporada
+    en una etiqueta más clara para la interfaz.
 
-    Ejemplo
-    -------
-    2025 -> "2025–2026"
+    Ejemplo:
+        2025 -> "2025–2026"
     """
 
     start_year = int(season_year)
@@ -23,17 +22,17 @@ def format_season_label(season_year: int) -> str:
 
 def format_class_label(label: int) -> str:
     """
-    Convierte la etiqueta numérica en una descripción
-    adecuada para la interfaz.
+    Convierte la clase numérica en una etiqueta
+    comprensible para el usuario.
     """
 
-    labels = {
+    class_labels = {
         0: "Sin detección cercana",
         1: "Con detección posterior",
     }
 
     try:
-        return labels[int(label)]
+        return class_labels[int(label)]
     except (KeyError, TypeError, ValueError) as exc:
         raise ValueError(
             f"Etiqueta de clase no válida: {label}"
@@ -44,10 +43,10 @@ def build_map_points(
     dataframe: pd.DataFrame,
 ) -> pd.DataFrame:
     """
-    Prepara las muestras de Fase 1 para su representación
-    en el mapa interactivo.
+    Convierte metadata de Fase 1 en una tabla preparada
+    para ser consumida por el futuro mapa.
 
-    No modifica el DataFrame recibido.
+    Esta función no modifica el DataFrame original.
     """
 
     required_columns = {
@@ -75,6 +74,7 @@ def build_map_points(
 
     points = dataframe.copy()
 
+    # Cantidad de parches asociados a cada grupo/evento.
     group_sizes = (
         points
         .groupby("group_id")
@@ -91,6 +91,7 @@ def build_map_points(
         points["n_patches_grupo"] > 1
     )
 
+    # Etiqueta visual de temporada.
     points["temporada"] = (
         pd.to_numeric(
             points["season_year"],
@@ -100,6 +101,7 @@ def build_map_points(
         .map(format_season_label)
     )
 
+    # Etiqueta visual de clase.
     points["clase"] = (
         pd.to_numeric(
             points["etiqueta"],
@@ -109,6 +111,7 @@ def build_map_points(
         .map(format_class_label)
     )
 
+    # Convertimos la fecha a un tipo temporal real.
     points["fecha_referencia"] = (
         pd.to_datetime(
             points["fecha_referencia"],
@@ -117,6 +120,7 @@ def build_map_points(
         .dt.date
     )
 
+    # Nombres más apropiados para la capa geográfica.
     points = points.rename(
         columns={
             "lat_centro": "lat",
@@ -152,12 +156,14 @@ def get_map_summary(
     map_points: pd.DataFrame,
 ) -> dict[str, Any]:
     """
-    Resume únicamente los puntos actualmente visibles
-    en el mapa.
+    Calcula las métricas correspondientes únicamente
+    a los puntos actualmente visibles en el mapa.
     """
 
     return {
-        "visible_patches": int(len(map_points)),
+        "visible_patches": int(
+            len(map_points)
+        ),
         "visible_groups": int(
             map_points["group_id"].nunique()
         ),
