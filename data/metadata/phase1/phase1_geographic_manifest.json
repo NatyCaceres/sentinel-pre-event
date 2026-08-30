@@ -1,0 +1,40 @@
+{
+    "artifact_id": "phase1_geographic_phase1_clean_2018_2025_ecc68b98",
+    "artifact_type": "phase1_geographic_metadata",
+    "file_name": "phase1_geographic.csv",
+    "sha256": "AB8784CF8CF3B108435D0798A573F6558A1B93C7C497873C887877467F64FA35",
+    "parent_dataset": {
+        "dataset_id": "phase1_clean_2018_2025_ecc68b98",
+        "file_name": "phase1_clean.csv",
+        "sha256": "ECC68B989F3A1CDA0ED8D4EF21EE6BB39A3AA7E81A684378D5C745E68472CF51"
+    },
+    "boundary_source": {
+        "dataset_name": "División Política Administrativa 2023",
+        "country": "Chile",
+        "source": "Geoportal de Chile / IDE Chile",
+        "year": 2023,
+        "local_package": "DPA_2023",
+        "communes_layer": {
+            "file": "COMUNAS/COMUNAS_v1.shp",
+            "crs": "EPSG:5360",
+            "records": 345
+        },
+        "administrative_fields_used": [
+            "CUT_REG",
+            "CUT_PROV",
+            "CUT_COM",
+            "REGION",
+            "PROVINCIA",
+            "COMUNA"
+        ],
+        "purpose": "Asignar comuna, provincia y región a las coordenadas de los parches de Fase 1 mediante cruce espacial."
+    },
+    "statistics": {
+        "rows": 1338,
+        "unique_patches": 1338,
+        "assigned": 1337,
+        "unresolved": 1,
+        "unique_communes": 165,
+        "unique_regions": 9
+    }
+}

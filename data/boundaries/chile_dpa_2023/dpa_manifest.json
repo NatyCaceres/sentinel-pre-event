@@ -1,0 +1,41 @@
+{
+    "dataset": "División Política Administrativa 2023",
+    "layer": "COMUNAS_v1",
+    "expected_records": 345,
+    "expected_crs": "EPSG:5360",
+    "expected_columns": [
+        "CUT_REG",
+        "CUT_PROV",
+        "CUT_COM",
+        "REGION",
+        "PROVINCIA",
+        "COMUNA",
+        "SUPERFICIE",
+        "geometry"
+    ],
+    "source_fingerprint": {
+        "layer": "COMUNAS_v1",
+        "records": 345,
+        "crs": "EPSG:5360",
+        "columns": [
+            "CUT_REG",
+            "CUT_PROV",
+            "CUT_COM",
+            "REGION",
+            "PROVINCIA",
+            "COMUNA",
+            "SUPERFICIE",
+            "geometry"
+        ],
+        "empty_geometries": 0,
+        "null_geometries": 0,
+        "invalid_geometries": 0,
+        "files": {
+            "COMUNAS_v1.shp": "2F9225A9558F5E84F942332A334FE2EAE50B14BF7FE8BC44B6F9DAA9DA193A61",
+            "COMUNAS_v1.dbf": "FBEA2068F3C6E0DE52D8D57598AB78649EF480B4FF2B73C6A92DA51113CDFE33",
+            "COMUNAS_v1.shx": "825EA6392C03B2493AB3137F8F950FBF0E17718E3FF84F27D8D4FBC5EB3CF65C",
+            "COMUNAS_v1.prj": "675C79030238AF3B14C4B31C674F4057049AE81BADD6726C7A0A234C4C498D86",
+            "COMUNAS_v1.cpg": "3AD3031F5503A4404AF825262EE8232CC04D4EA6683D42C5DD0A2F2A27AC9824"
+        }
+    }
+}

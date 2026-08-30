@@ -1,0 +1,21 @@
+{
+    "dataset_name": "División Política Administrativa 2023",
+    "country": "Chile",
+    "source": "Geoportal de Chile / IDE Chile",
+    "year": 2023,
+    "local_package": "DPA_2023",
+    "communes_layer": {
+        "file": "COMUNAS/COMUNAS_v1.shp",
+        "crs": "EPSG:5360",
+        "records": 345
+    },
+    "administrative_fields_used": [
+        "CUT_REG",
+        "CUT_PROV",
+        "CUT_COM",
+        "REGION",
+        "PROVINCIA",
+        "COMUNA"
+    ],
+    "purpose": "Asignar comuna, provincia y región a las coordenadas de los parches de Fase 1 mediante cruce espacial."
+}
