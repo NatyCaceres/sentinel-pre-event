@@ -29,3 +29,6 @@ __pycache__/
 # SISTEMA OPERATIVO
 .DS_Store
 Thumbs.db
+
+# DATOS GEOGRÁFICOS CRUDOS
+data/boundaries/chile_dpa_2023/raw/
