@@ -7,9 +7,8 @@ from streamlit_folium import st_folium
 from src.data.explorer_filters import (
     apply_explorer_filters,
 )
-from src.data.phase1 import Phase1Dataset
-from src.data.phase1_geographic import (
-    load_phase1_geographic,
+from src.data.product_catalog_loader import (
+    load_product_catalog,
 )
 from src.geo.folium_map import (
     build_phase1_folium_map,
@@ -130,12 +129,6 @@ st.markdown(
         margin-bottom: 0.6rem;
     }
 
-    .small-note {
-        color: #98A2B3;
-        font-size: 0.80rem;
-        margin-top: 0.5rem;
-    }
-
     </style>
     """,
     unsafe_allow_html=True,
@@ -143,48 +136,64 @@ st.markdown(
 
 
 # ============================================================
-# CARGA DE DATOS
+# CARGA DEL CATÁLOGO
 # ============================================================
-
-@st.cache_resource
-def load_phase1_dataset() -> Phase1Dataset:
-    """
-    Carga el dataset validado de Fase 1.
-    """
-
-    return Phase1Dataset.load()
-
 
 @st.cache_data
-def load_geographic_data():
+def load_catalog():
     """
-    Carga el artefacto geográfico validado.
+    Carga el catálogo validado que representa
+    las muestras disponibles para el producto.
     """
 
-    return load_phase1_geographic()
+    return load_product_catalog()
 
 
-dataset = load_phase1_dataset()
-geographic = load_geographic_data()
+catalog = load_catalog()
 
 
 # ============================================================
-# PREPARACIÓN GEOGRÁFICA
+# PREPARACIÓN DEL MAPA
 # ============================================================
 
-# El registro sin correspondencia administrativa
-# permanece en los datos originales, pero no se utiliza
-# en la representación cartográfica principal.
-mapped_data = geographic[
-    geographic["administrative_status"]
-    == "assigned"
+# El catálogo completo contiene únicamente muestras
+# con imagen Sentinel-2 disponible.
+#
+# Para el mapa se utilizan aquellas que además tienen
+# contexto administrativo resuelto.
+mapped_catalog = catalog[
+    catalog["map_eligible"]
 ].copy()
 
+
+# build_map_points conserva la representación
+# cartográfica utilizada por el explorador.
 all_points = build_map_points(
-    mapped_data
+    mapped_catalog
 )
 
-summary = dataset.summary()
+
+# ============================================================
+# INFORMACIÓN GENERAL DEL PRODUCTO
+# ============================================================
+
+total_patches = int(
+    catalog["patch_id"].nunique()
+)
+
+total_groups = int(
+    catalog["group_id"].nunique()
+)
+
+total_seasons = int(
+    catalog["season_year"].nunique()
+)
+
+total_regions = int(
+    catalog["REGION"]
+    .dropna()
+    .nunique()
+)
 
 
 # ============================================================
@@ -193,7 +202,7 @@ summary = dataset.summary()
 
 st.markdown(
     '<div class="project-badge">'
-    'EXPLORADOR GEOESPACIAL · FASE 1'
+    'EXPLORADOR GEOESPACIAL'
     '</div>',
     unsafe_allow_html=True,
 )
@@ -207,38 +216,43 @@ st.markdown(
 
 st.markdown(
     '<div class="main-description">'
-    'Exploración geográfica de las muestras pre-evento '
-    'construidas para el análisis con Sentinel-2 y deep learning.'
+    'Explora muestras Sentinel-2 pre-evento y su '
+    'distribución geográfica antes de analizar sus '
+    'características espectrales mediante deep learning.'
     '</div>',
     unsafe_allow_html=True,
 )
 
 
 # ============================================================
-# MÉTRICAS GENERALES DEL ESTUDIO
+# MÉTRICAS PRINCIPALES
 # ============================================================
 
 metric_1, metric_2, metric_3, metric_4 = st.columns(4)
 
+
 metric_1.metric(
-    "Parches del estudio",
-    f"{summary['unique_patches']:,}".replace(",", "."),
-)
-
-metric_2.metric(
-    "Grupos / eventos",
-    f"{summary['unique_groups']:,}".replace(",", "."),
-)
-
-metric_3.metric(
-    "Temporadas analizadas",
-    len(
-        geographic["season_year"]
-        .dropna()
-        .unique()
+    "Parches disponibles",
+    f"{total_patches:,}".replace(
+        ",",
+        ".",
     ),
 )
 
+
+metric_2.metric(
+    "Grupos / eventos",
+    f"{total_groups:,}".replace(
+        ",",
+        ".",
+    ),
+)
+
+
+metric_3.metric(
+    "Temporadas",
+    total_seasons,
+)
 
 # ============================================================
 # EXPLORACIÓN GEOGRÁFICA
@@ -260,16 +274,16 @@ st.markdown(
 
 st.markdown(
     '<div class="section-description">'
-    'Explora la distribución espacial de los parches utilizando '
-    'los filtros disponibles. El mapa y sus indicadores se '
-    'actualizan automáticamente según la selección realizada.'
+    'Filtra las muestras Sentinel-2 disponibles y explora '
+    'su distribución espacial. Los indicadores y el mapa '
+    'se actualizan según los criterios seleccionados.'
     '</div>',
     unsafe_allow_html=True,
 )
 
 
 # ============================================================
-# OPCIONES DISPONIBLES PARA LOS FILTROS
+# OPCIONES DE FILTRO
 # ============================================================
 
 season_years = sorted(
@@ -280,10 +294,12 @@ season_years = sorted(
     .tolist()
 )
 
+
 season_labels = {
     format_season_label(year): year
     for year in season_years
 }
+
 
 region_options = sorted(
     all_points["REGION"]
@@ -293,16 +309,19 @@ region_options = sorted(
     .tolist()
 )
 
+
 reference_dates = pd.to_datetime(
     all_points["fecha_referencia"],
     errors="coerce",
 )
+
 
 minimum_reference_date = (
     reference_dates
     .min()
     .date()
 )
+
 
 maximum_reference_date = (
     reference_dates
@@ -312,7 +331,7 @@ maximum_reference_date = (
 
 
 # ============================================================
-# FILTROS DEL EXPLORADOR
+# FILTROS
 # ============================================================
 
 st.markdown(
@@ -322,10 +341,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-
-# ------------------------------------------------------------
-# PRIMERA FILA: TEMPORADA Y REGIÓN
-# ------------------------------------------------------------
 
 filter_col_1, filter_col_2 = st.columns(2)
 
@@ -356,10 +371,6 @@ with filter_col_2:
     )
 
 
-# ------------------------------------------------------------
-# SEGUNDA FILA: CLASE
-# ------------------------------------------------------------
-
 class_filter = st.segmented_control(
     "Clase de la muestra",
     options=[
@@ -371,13 +382,10 @@ class_filter = st.segmented_control(
     key="class_filter",
 )
 
+
 if class_filter is None:
     class_filter = "Todas"
 
-
-# ------------------------------------------------------------
-# TERCERA FILA: FECHA Y MULTIPATCH
-# ------------------------------------------------------------
 
 filter_col_3, filter_col_4 = st.columns(
     [2, 1]
@@ -410,19 +418,15 @@ with filter_col_4:
         value=False,
         key="multipatch_filter",
         help=(
-            "Muestra únicamente grupos que contienen "
-            "más de un parche."
+            "Muestra únicamente grupos con "
+            "más de un parche disponible."
         ),
     )
 
 
 # ============================================================
-# TRADUCCIÓN DE FILTROS VISUALES A VALORES INTERNOS
+# TRADUCCIÓN DE FILTROS
 # ============================================================
-
-# ------------------------------------------------------------
-# TEMPORADA
-# ------------------------------------------------------------
 
 if selected_season_label == "Todas":
 
@@ -430,14 +434,12 @@ if selected_season_label == "Todas":
 
 else:
 
-    selected_season_year = season_labels[
-        selected_season_label
-    ]
+    selected_season_year = (
+        season_labels[
+            selected_season_label
+        ]
+    )
 
-
-# ------------------------------------------------------------
-# REGIÓN
-# ------------------------------------------------------------
 
 if selected_region == "Todas":
 
@@ -448,20 +450,12 @@ else:
     region_filter = selected_region
 
 
-# ------------------------------------------------------------
-# CLASE
-# ------------------------------------------------------------
-
 class_value = {
     "Todas": None,
     "Con detección posterior": 1,
     "Sin detección cercana": 0,
 }[class_filter]
 
-
-# ------------------------------------------------------------
-# FECHAS
-# ------------------------------------------------------------
 
 if (
     isinstance(
@@ -471,15 +465,23 @@ if (
     and len(selected_dates) == 2
 ):
 
-    reference_start = selected_dates[0]
-    reference_end = selected_dates[1]
+    reference_start = (
+        selected_dates[0]
+    )
+
+    reference_end = (
+        selected_dates[1]
+    )
 
 else:
 
-    # Streamlit puede devolver temporalmente una sola fecha
-    # mientras el usuario completa el intervalo.
-    reference_start = minimum_reference_date
-    reference_end = maximum_reference_date
+    reference_start = (
+        minimum_reference_date
+    )
+
+    reference_end = (
+        maximum_reference_date
+    )
 
 
 # ============================================================
@@ -498,14 +500,14 @@ points = apply_explorer_filters(
 
 
 # ============================================================
-# CONTROL DE RESULTADO VACÍO
+# SIN RESULTADOS
 # ============================================================
 
 if points.empty:
 
     st.warning(
-        "No existen muestras que cumplan la combinación "
-        "de filtros seleccionada."
+        "No existen muestras que cumplan "
+        "la combinación de filtros seleccionada."
     )
 
     st.stop()
@@ -516,12 +518,18 @@ if points.empty:
 # ============================================================
 
 visible_positive = int(
-    (points["etiqueta"] == 1).sum()
+    (
+        points["etiqueta"] == 1
+    ).sum()
 )
 
+
 visible_negative = int(
-    (points["etiqueta"] == 0).sum()
+    (
+        points["etiqueta"] == 0
+    ).sum()
 )
+
 
 visible_groups = int(
     points["group_id"].nunique()
@@ -530,14 +538,22 @@ visible_groups = int(
 
 info_1, info_2, info_3 = st.columns(3)
 
+
 info_1.metric(
     "Muestras visibles",
-    f"{len(points):,}".replace(",", "."),
+    f"{len(points):,}".replace(
+        ",",
+        ".",
+    ),
 )
+
 
 info_2.metric(
     "Grupos visibles",
-    f"{visible_groups:,}".replace(",", "."),
+    f"{visible_groups:,}".replace(
+        ",",
+        ".",
+    ),
 )
 
 
@@ -549,7 +565,10 @@ if class_filter == "Todas":
             f"{visible_positive:,}"
             " / "
             f"{visible_negative:,}"
-        ).replace(",", "."),
+        ).replace(
+            ",",
+            ".",
+        ),
         help=(
             "Con detección posterior / "
             "Sin detección cercana"
@@ -570,8 +589,10 @@ else:
 
 if class_filter == "Todas":
 
-    legend_1, legend_2, legend_3 = st.columns(
-        [1.1, 1.1, 1.8]
+    legend_1, legend_2, legend_3 = (
+        st.columns(
+            [1.1, 1.1, 1.8]
+        )
     )
 
     legend_1.markdown(
@@ -587,12 +608,15 @@ if class_filter == "Todas":
     )
 
 
-elif class_filter == "Con detección posterior":
+elif (
+    class_filter
+    == "Con detección posterior"
+):
 
     st.markdown(
         "🔴 **Con detección posterior** · "
-        "Los clusters visibles contienen únicamente "
-        "muestras de esta clase."
+        "Los clusters visibles contienen "
+        "únicamente muestras de esta clase."
     )
 
 
@@ -600,15 +624,16 @@ else:
 
     st.markdown(
         "🔵 **Sin detección cercana** · "
-        "Los clusters visibles contienen únicamente "
-        "muestras de esta clase."
+        "Los clusters visibles contienen "
+        "únicamente muestras de esta clase."
     )
 
 
 st.markdown(
     '<div class="map-help">'
-    'Pasa el cursor sobre un cluster para observar su '
-    'cobertura y haz clic para acercarte a las muestras.'
+    'Pasa el cursor sobre un cluster para observar '
+    'su cobertura y haz clic para acercarte '
+    'a las muestras.'
     '</div>',
     unsafe_allow_html=True,
 )
@@ -623,8 +648,9 @@ map_object = build_phase1_folium_map(
     class_filter=class_filter,
 )
 
+
 map_key = (
-    f"phase1_map_"
+    f"product_map_"
     f"{selected_season_year}_"
     f"{region_filter}_"
     f"{class_filter}_"
@@ -633,25 +659,11 @@ map_key = (
     f"{multipatch_only}"
 )
 
+
 st_folium(
     map_object,
     height=620,
     use_container_width=True,
     returned_objects=[],
     key=map_key,
-)
-
-
-# ============================================================
-# NOTA METODOLÓGICA
-# ============================================================
-
-st.markdown(
-    '<div class="small-note">'
-    '1 registro se conserva en la metadata de Fase 1, '
-    'pero no se representa debido a que no fue posible '
-    'asignarle una unidad administrativa con la '
-    'DPA 2023 utilizada.'
-    '</div>',
-    unsafe_allow_html=True,
 )
