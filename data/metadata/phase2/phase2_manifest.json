@@ -1,0 +1,50 @@
+{
+    "dataset_id": "phase2_sentinel8ch_2018_2025_f1262532",
+    "artifact_type": "phase2_modeling_metadata",
+    "file_name": "metadata_modelado_protocolo_v1.csv",
+    "sha256": "F1262532FE0560C7BE07F599C205D8E94962FA4C0FA5E30B1F127738FE752588",
+    "statistics": {
+        "rows": 1253,
+        "unique_patches": 1253,
+        "unique_groups": 1214,
+        "class_counts": {
+            "0": 606,
+            "1": 647
+        },
+        "split_counts": {
+            "train": 1009,
+            "test": 244
+        },
+        "subsplit_counts": {
+            "train": 819,
+            "test": 244,
+            "validation": 190
+        },
+        "seasons": [
+            2018,
+            2019,
+            2020,
+            2021,
+            2022,
+            2023,
+            2024,
+            2025
+        ],
+        "available_tifs": 1253
+    },
+    "data_contract": {
+        "channels": [
+            "B2",
+            "B3",
+            "B4",
+            "B8",
+            "B11",
+            "B12",
+            "NDMI",
+            "NBR"
+        ],
+        "expected_channels": 8,
+        "patch_id_unique": true,
+        "availability_field": "existe_tif"
+    }
+}

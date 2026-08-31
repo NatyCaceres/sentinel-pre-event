@@ -1,0 +1,78 @@
+{
+    "dataset_name": "metadata_modelado_protocolo_v1",
+    "description": "Metadata de parches Sentinel-2 válidos para modelado de 8 canales.",
+
+    "required_columns": [
+        "patch_id",
+        "group_id",
+        "etiqueta",
+        "lat_centro",
+        "lon_centro",
+        "season_year",
+        "fecha_referencia",
+        "fecha_objetivo_pre_evento",
+        "split",
+        "event_weight",
+        "patch_id_export",
+        "split_export",
+        "archivo_model_8ch",
+        "n_assets_candidatos",
+        "n_imagenes_candidatas",
+        "n_imagenes_validas",
+        "image_id",
+        "fecha_imagen_seleccionada",
+        "dias_diferencia_objetivo",
+        "pct_pixeles_validos_patch",
+        "cloudy_pixel_percentage",
+        "tipo_seleccion",
+        "archivo_model8_esperado",
+        "archivo_existe_drive",
+        "estado_exportacion",
+        "ruta_model_8ch",
+        "existe_tif",
+        "subsplit",
+        "event_weight_model"
+    ],
+
+    "identity": {
+        "patch_id_unique": true,
+        "allowed_labels": [0, 1],
+        "allowed_seasons": [
+            2018,
+            2019,
+            2020,
+            2021,
+            2022,
+            2023,
+            2024,
+            2025
+        ],
+        "allowed_split": [
+            "train",
+            "test"
+        ],
+        "allowed_subsplit": [
+            "train",
+            "validation",
+            "test"
+        ]
+    },
+
+    "availability_contract": {
+        "existe_tif": true,
+        "archivo_existe_drive": true,
+        "required_non_null": [
+            "image_id",
+            "fecha_imagen_seleccionada",
+            "archivo_model8_esperado",
+            "ruta_model_8ch"
+        ]
+    },
+
+    "consistency_checks": [
+        "patch_id_equals_patch_id_export",
+        "split_equals_split_export",
+        "archivo_model_8ch_equals_archivo_model8_esperado",
+        "ruta_basename_equals_archivo_model8_esperado"
+    ]
+}

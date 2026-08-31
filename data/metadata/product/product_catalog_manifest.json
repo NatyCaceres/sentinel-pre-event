@@ -1,0 +1,29 @@
+{
+    "catalog_id": "product_catalog_307703a7",
+    "artifact_type": "product_catalog",
+    "file_name": "product_catalog.csv",
+    "sha256": "307703A743A3021055A8B76BD2B1ED2D579988921927366ABFC0887DDD97E16B",
+    "parents": {
+        "phase1_geographic": {
+            "artifact_id": "phase1_geographic_phase1_clean_2018_2025_ecc68b98",
+            "sha256": "AB8784CF8CF3B108435D0798A573F6558A1B93C7C497873C887877467F64FA35"
+        },
+        "phase2": {
+            "dataset_id": "phase2_sentinel8ch_2018_2025_f1262532",
+            "sha256": "F1262532FE0560C7BE07F599C205D8E94962FA4C0FA5E30B1F127738FE752588"
+        }
+    },
+    "statistics": {
+        "rows": 1253,
+        "unique_patches": 1253,
+        "unique_groups": 1214,
+        "image_available": 1253,
+        "map_eligible": 1252,
+        "administrative_unresolved": 1,
+        "multipatch_groups_available": 14,
+        "class_counts": {
+            "0": 606,
+            "1": 647
+        }
+    }
+}
