@@ -1,0 +1,30 @@
+{
+    "product": "Sentinel-2 pre-event patch",
+    "collection": "COPERNICUS/S2_SR_HARMONIZED",
+    "channels": [
+        "B2",
+        "B3",
+        "B4",
+        "B8",
+        "B11",
+        "B12",
+        "NDMI",
+        "NBR"
+    ],
+    "shape": [
+        8,
+        64,
+        64
+    ],
+    "dtype": "float32",
+    "band_ranges": {
+        "B2": [0.0, 1.0],
+        "B3": [0.0, 1.0],
+        "B4": [0.0, 1.0],
+        "B8": [0.0, 1.0],
+        "B11": [0.0, 1.0],
+        "B12": [0.0, 1.0],
+        "NDMI": [-1.0, 1.0],
+        "NBR": [-1.0, 1.0]
+    }
+}

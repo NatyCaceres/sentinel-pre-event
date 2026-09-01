@@ -7,6 +7,12 @@ from streamlit_folium import st_folium
 from src.data.explorer_filters import (
     apply_explorer_filters,
 )
+from src.data.explorer_selection import (
+    get_available_group_ids,
+    get_available_patch_ids,
+    get_group_patch_ids,
+    get_patch,
+)
 from src.data.product_catalog_loader import (
     load_product_catalog,
 )
@@ -17,6 +23,9 @@ from src.geo.phase1_map import (
     build_map_points,
     format_season_label,
 )
+from src.ui.styles import (
+    apply_app_styles,
+)
 
 
 # ============================================================
@@ -24,261 +33,53 @@ from src.geo.phase1_map import (
 # ============================================================
 
 st.set_page_config(
-    page_title="Análisis espectral pre-evento",
+    page_title="Sentinel Pre-Event",
     page_icon="🛰️",
     layout="wide",
-    initial_sidebar_state="collapsed",
 )
 
-
-# ============================================================
-# ESTILOS
-# ============================================================
-
-st.markdown(
-    """
-    <style>
-
-    .stApp {
-        background-color: #F7F8FA;
-    }
-
-    .block-container {
-        max-width: 1500px;
-        padding-top: 2.3rem;
-        padding-bottom: 3rem;
-    }
-
-    .project-badge {
-        display: inline-block;
-        background-color: #E8F0FE;
-        color: #2457A6;
-        padding: 0.35rem 0.75rem;
-        border-radius: 999px;
-        font-size: 0.76rem;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        margin-bottom: 0.8rem;
-    }
-
-    .main-title {
-        color: #1F2937;
-        font-size: 2.35rem;
-        font-weight: 750;
-        line-height: 1.15;
-        margin-bottom: 0;
-    }
-
-    .main-description {
-        color: #667085;
-        font-size: 1rem;
-        margin-top: 0.65rem;
-        margin-bottom: 1.8rem;
-        max-width: 900px;
-    }
-
-    div[data-testid="stMetric"] {
-        background-color: white;
-        border: 1px solid #E5E7EB;
-        border-radius: 14px;
-        padding: 1rem 1.15rem;
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-    }
-
-    div[data-testid="stMetricLabel"] {
-        color: #667085;
-    }
-
-    div[data-testid="stMetricValue"] {
-        color: #1F2937;
-    }
-
-    .section-label {
-        color: #2457A6;
-        font-size: 0.78rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        margin-top: 1.8rem;
-        margin-bottom: 0.25rem;
-    }
-
-    .section-title {
-        color: #1F2937;
-        font-size: 1.55rem;
-        font-weight: 700;
-        margin-bottom: 0.3rem;
-    }
-
-    .section-description {
-        color: #667085;
-        margin-bottom: 1rem;
-    }
-
-    .filter-title {
-        color: #475467;
-        font-size: 0.82rem;
-        font-weight: 700;
-        margin-top: 0.5rem;
-        margin-bottom: 0.25rem;
-    }
-
-    .map-help {
-        color: #667085;
-        font-size: 0.84rem;
-        margin-top: 0.1rem;
-        margin-bottom: 0.6rem;
-    }
-
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+apply_app_styles()
 
 
 # ============================================================
-# CARGA DEL CATÁLOGO
+# HELPERS
+# ============================================================
+
+def format_date(value) -> str:
+    if pd.isna(value):
+        return "Sin información"
+
+    return pd.Timestamp(
+        value
+    ).strftime("%d-%m-%Y")
+
+
+def format_percent(value) -> str:
+    if pd.isna(value):
+        return "Sin información"
+
+    return f"{float(value):.1f} %"
+
+
+# ============================================================
+# CATÁLOGO
 # ============================================================
 
 @st.cache_data
 def load_catalog():
-    """
-    Carga el catálogo validado que representa
-    las muestras disponibles para el producto.
-    """
-
     return load_product_catalog()
 
 
 catalog = load_catalog()
 
 
-# ============================================================
-# PREPARACIÓN DEL MAPA
-# ============================================================
-
-# El catálogo completo contiene únicamente muestras
-# con imagen Sentinel-2 disponible.
-#
-# Para el mapa se utilizan aquellas que además tienen
-# contexto administrativo resuelto.
+# Solo el mapa necesita correspondencia territorial resuelta.
 mapped_catalog = catalog[
     catalog["map_eligible"]
 ].copy()
 
-
-# build_map_points conserva la representación
-# cartográfica utilizada por el explorador.
 all_points = build_map_points(
     mapped_catalog
-)
-
-
-# ============================================================
-# INFORMACIÓN GENERAL DEL PRODUCTO
-# ============================================================
-
-total_patches = int(
-    catalog["patch_id"].nunique()
-)
-
-total_groups = int(
-    catalog["group_id"].nunique()
-)
-
-total_seasons = int(
-    catalog["season_year"].nunique()
-)
-
-total_regions = int(
-    catalog["REGION"]
-    .dropna()
-    .nunique()
-)
-
-
-# ============================================================
-# ENCABEZADO
-# ============================================================
-
-st.markdown(
-    '<div class="project-badge">'
-    'EXPLORADOR GEOESPACIAL'
-    '</div>',
-    unsafe_allow_html=True,
-)
-
-st.markdown(
-    '<div class="main-title">'
-    'Análisis espectral del terreno previo al fuego'
-    '</div>',
-    unsafe_allow_html=True,
-)
-
-st.markdown(
-    '<div class="main-description">'
-    'Explora muestras Sentinel-2 pre-evento y su '
-    'distribución geográfica antes de analizar sus '
-    'características espectrales mediante deep learning.'
-    '</div>',
-    unsafe_allow_html=True,
-)
-
-
-# ============================================================
-# MÉTRICAS PRINCIPALES
-# ============================================================
-
-metric_1, metric_2, metric_3, metric_4 = st.columns(4)
-
-
-metric_1.metric(
-    "Parches disponibles",
-    f"{total_patches:,}".replace(
-        ",",
-        ".",
-    ),
-)
-
-
-metric_2.metric(
-    "Grupos / eventos",
-    f"{total_groups:,}".replace(
-        ",",
-        ".",
-    ),
-)
-
-
-metric_3.metric(
-    "Temporadas",
-    total_seasons,
-)
-
-# ============================================================
-# EXPLORACIÓN GEOGRÁFICA
-# ============================================================
-
-st.markdown(
-    '<div class="section-label">'
-    'DISTRIBUCIÓN DE LAS MUESTRAS'
-    '</div>',
-    unsafe_allow_html=True,
-)
-
-st.markdown(
-    '<div class="section-title">'
-    'Exploración geográfica'
-    '</div>',
-    unsafe_allow_html=True,
-)
-
-st.markdown(
-    '<div class="section-description">'
-    'Filtra las muestras Sentinel-2 disponibles y explora '
-    'su distribución espacial. Los indicadores y el mapa '
-    'se actualizan según los criterios seleccionados.'
-    '</div>',
-    unsafe_allow_html=True,
 )
 
 
@@ -294,12 +95,10 @@ season_years = sorted(
     .tolist()
 )
 
-
 season_labels = {
     format_season_label(year): year
     for year in season_years
 }
-
 
 region_options = sorted(
     all_points["REGION"]
@@ -309,19 +108,16 @@ region_options = sorted(
     .tolist()
 )
 
-
 reference_dates = pd.to_datetime(
     all_points["fecha_referencia"],
     errors="coerce",
 )
-
 
 minimum_reference_date = (
     reference_dates
     .min()
     .date()
 )
-
 
 maximum_reference_date = (
     reference_dates
@@ -331,122 +127,133 @@ maximum_reference_date = (
 
 
 # ============================================================
-# FILTROS
+# LAYOUT PRINCIPAL
 # ============================================================
 
-st.markdown(
-    '<div class="filter-title">'
-    'Filtros de exploración'
-    '</div>',
-    unsafe_allow_html=True,
+filters_column, content_column = st.columns(
+    [0.72, 3.28],
+    gap="large",
 )
 
 
-filter_col_1, filter_col_2 = st.columns(2)
+# ============================================================
+# PANEL IZQUIERDO
+# ============================================================
 
-
-with filter_col_1:
-
-    selected_season_label = st.selectbox(
-        "Temporada",
-        options=[
-            "Todas"
-        ] + list(
-            season_labels.keys()
-        ),
-        index=0,
-        key="season_filter",
-    )
-
-
-with filter_col_2:
-
-    selected_region = st.selectbox(
-        "Región",
-        options=[
-            "Todas"
-        ] + region_options,
-        index=0,
-        key="region_filter",
-    )
-
-
-class_filter = st.segmented_control(
-    "Clase de la muestra",
-    options=[
-        "Todas",
-        "Con detección posterior",
-        "Sin detección cercana",
-    ],
-    default="Todas",
-    key="class_filter",
-)
-
-
-if class_filter is None:
-    class_filter = "Todas"
-
-
-filter_col_3, filter_col_4 = st.columns(
-    [2, 1]
-)
-
-
-with filter_col_3:
-
-    selected_dates = st.date_input(
-        "Fecha de referencia",
-        value=(
-            minimum_reference_date,
-            maximum_reference_date,
-        ),
-        min_value=minimum_reference_date,
-        max_value=maximum_reference_date,
-        key="reference_date_filter",
-    )
-
-
-with filter_col_4:
+with filters_column:
 
     st.markdown(
-        "<br>",
+        '<div class="filters-sticky-anchor"></div>',
         unsafe_allow_html=True,
     )
 
-    multipatch_only = st.checkbox(
-        "Solo grupos multipatch",
-        value=False,
-        key="multipatch_filter",
-        help=(
-            "Muestra únicamente grupos con "
-            "más de un parche disponible."
-        ),
-    )
+    with st.container(
+        border=True,
+    ):
 
+        st.markdown(
+            '<div class="filters-panel-anchor"></div>',
+            unsafe_allow_html=True,
+        )
 
+        st.caption(
+            "CONFIGURAR CONSULTA"
+        )
+
+        st.markdown(
+            "### Nueva consulta"
+        )
+
+        st.caption(
+            "Ajusta los criterios de exploración."
+        )
+
+        with st.form(
+            "explorer_query_form",
+            border=False,
+        ):
+
+            selected_season_label = st.selectbox(
+                "Temporada",
+                options=[
+                    "Todas"
+                ] + list(
+                    season_labels.keys()
+                ),
+                index=0,
+                key="query_season",
+            )
+
+            selected_region = st.selectbox(
+                "Región",
+                options=[
+                    "Todas"
+                ] + region_options,
+                index=0,
+                key="query_region",
+            )
+
+            class_filter = st.selectbox(
+                "Clase",
+                options=[
+                    "Todas",
+                    "Con detección posterior",
+                    "Sin detección cercana",
+                ],
+                index=0,
+                key="query_class",
+            )
+
+            # Los controles menos utilizados se mantienen
+            # disponibles sin ocupar permanentemente espacio.
+            with st.expander(
+                "Más filtros",
+                expanded=False,
+            ):
+
+                selected_dates = st.date_input(
+                    "Fecha de referencia",
+                    value=(
+                        minimum_reference_date,
+                        maximum_reference_date,
+                    ),
+                    min_value=minimum_reference_date,
+                    max_value=maximum_reference_date,
+                    key="query_dates",
+                )
+
+                multipatch_only = st.checkbox(
+                    "Solo grupos multipatch",
+                    value=False,
+                    key="query_multipatch",
+                    help=(
+                        "Conserva únicamente grupos "
+                        "con más de un parche disponible."
+                    ),
+                )
+
+            st.write("")
+
+            st.form_submit_button(
+                "Aplicar filtros",
+                type="primary",
+                use_container_width=True,
+            )
 # ============================================================
 # TRADUCCIÓN DE FILTROS
 # ============================================================
 
 if selected_season_label == "Todas":
-
     selected_season_year = None
-
 else:
-
-    selected_season_year = (
-        season_labels[
-            selected_season_label
-        ]
-    )
+    selected_season_year = season_labels[
+        selected_season_label
+    ]
 
 
 if selected_region == "Todas":
-
     region_filter = None
-
 else:
-
     region_filter = selected_region
 
 
@@ -457,35 +264,30 @@ class_value = {
 }[class_filter]
 
 
-if (
-    isinstance(
-        selected_dates,
-        (tuple, list),
-    )
-    and len(selected_dates) == 2
+if isinstance(
+    selected_dates,
+    (tuple, list),
 ):
 
-    reference_start = (
-        selected_dates[0]
-    )
+    if len(selected_dates) == 2:
+        reference_start = selected_dates[0]
+        reference_end = selected_dates[1]
 
-    reference_end = (
-        selected_dates[1]
-    )
+    elif len(selected_dates) == 1:
+        reference_start = selected_dates[0]
+        reference_end = selected_dates[0]
+
+    else:
+        reference_start = minimum_reference_date
+        reference_end = maximum_reference_date
 
 else:
-
-    reference_start = (
-        minimum_reference_date
-    )
-
-    reference_end = (
-        maximum_reference_date
-    )
+    reference_start = minimum_reference_date
+    reference_end = maximum_reference_date
 
 
 # ============================================================
-# APLICAR FILTROS
+# FILTRADO
 # ============================================================
 
 points = apply_explorer_filters(
@@ -500,170 +302,525 @@ points = apply_explorer_filters(
 
 
 # ============================================================
-# SIN RESULTADOS
+# CONTENIDO DERECHO
 # ============================================================
 
-if points.empty:
+with content_column:
 
-    st.warning(
-        "No existen muestras que cumplan "
-        "la combinación de filtros seleccionada."
+    # --------------------------------------------------------
+    # APP BAR
+    # --------------------------------------------------------
+
+    brand_column, status_column = st.columns(
+        [4, 1]
     )
 
-    st.stop()
+    with brand_column:
 
-
-# ============================================================
-# MÉTRICAS DINÁMICAS
-# ============================================================
-
-visible_positive = int(
-    (
-        points["etiqueta"] == 1
-    ).sum()
-)
-
-
-visible_negative = int(
-    (
-        points["etiqueta"] == 0
-    ).sum()
-)
-
-
-visible_groups = int(
-    points["group_id"].nunique()
-)
-
-
-info_1, info_2, info_3 = st.columns(3)
-
-
-info_1.metric(
-    "Muestras visibles",
-    f"{len(points):,}".replace(
-        ",",
-        ".",
-    ),
-)
-
-
-info_2.metric(
-    "Grupos visibles",
-    f"{visible_groups:,}".replace(
-        ",",
-        ".",
-    ),
-)
-
-
-if class_filter == "Todas":
-
-    info_3.metric(
-        "Con / Sin detección",
-        (
-            f"{visible_positive:,}"
-            " / "
-            f"{visible_negative:,}"
-        ).replace(
-            ",",
-            ".",
-        ),
-        help=(
-            "Con detección posterior / "
-            "Sin detección cercana"
-        ),
-    )
-
-else:
-
-    info_3.metric(
-        "Clase visible",
-        class_filter,
-    )
-
-
-# ============================================================
-# LEYENDA
-# ============================================================
-
-if class_filter == "Todas":
-
-    legend_1, legend_2, legend_3 = (
-        st.columns(
-            [1.1, 1.1, 1.8]
+        st.markdown(
+            '<div class="product-name">'
+            '🛰 SENTINEL PRE-EVENT'
+            '</div>',
+            unsafe_allow_html=True,
         )
-    )
 
-    legend_1.markdown(
-        "🔴 **Con detección posterior**"
-    )
+    with status_column:
 
-    legend_2.markdown(
-        "🔵 **Sin detección cercana**"
-    )
-
-    legend_3.markdown(
-        "⚫ **Cluster con ambas clases**"
-    )
+        st.markdown(
+            '<div class="validated-status">'
+            '🟢 Datos validados<br>'
+            'Sentinel-2 · 8 canales'
+            '</div>',
+            unsafe_allow_html=True,
+        )
 
 
-elif (
-    class_filter
-    == "Con detección posterior"
-):
+    # --------------------------------------------------------
+    # CABECERA
+    # --------------------------------------------------------
 
     st.markdown(
-        "🔴 **Con detección posterior** · "
-        "Los clusters visibles contienen "
-        "únicamente muestras de esta clase."
+        '<div class="product-title">'
+        'Análisis espectral del terreno previo al fuego'
+        '</div>',
+        unsafe_allow_html=True,
     )
-
-
-else:
 
     st.markdown(
-        "🔵 **Sin detección cercana** · "
-        "Los clusters visibles contienen "
-        "únicamente muestras de esta clase."
+        '<div class="product-subtitle">'
+        'Explora muestras Sentinel-2 pre-evento, '
+        'revisa su contexto territorial y posteriormente '
+        'analiza sus características espectrales '
+        'mediante deep learning.'
+        '</div>',
+        unsafe_allow_html=True,
+    )
+
+    st.write("")
+
+
+    # --------------------------------------------------------
+    # NAVEGACIÓN
+    # --------------------------------------------------------
+
+    current_view = st.segmented_control(
+        "Navegación",
+        options=[
+            "01 · Mapa",
+            "02 · Parches",
+        ],
+        default="01 · Mapa",
+        label_visibility="collapsed",
+        key="main_navigation",
+    )
+
+    if current_view is None:
+        current_view = "01 · Mapa"
+
+
+    # --------------------------------------------------------
+    # SIN RESULTADOS
+    # --------------------------------------------------------
+
+    if points.empty:
+
+        st.warning(
+            "No existen muestras que cumplan "
+            "la combinación de filtros seleccionada."
+        )
+
+        st.stop()
+
+
+    # --------------------------------------------------------
+    # MÉTRICAS
+    # --------------------------------------------------------
+
+    visible_positive = int(
+        (
+            points["etiqueta"] == 1
+        ).sum()
+    )
+
+    visible_negative = int(
+        (
+            points["etiqueta"] == 0
+        ).sum()
+    )
+
+    visible_groups = int(
+        points["group_id"].nunique()
     )
 
 
-st.markdown(
-    '<div class="map-help">'
-    'Pasa el cursor sobre un cluster para observar '
-    'su cobertura y haz clic para acercarte '
-    'a las muestras.'
-    '</div>',
-    unsafe_allow_html=True,
-)
+    # ========================================================
+    # VISTA 01 — MAPA
+    # ========================================================
+
+    if current_view == "01 · Mapa":
+
+        st.markdown(
+            '<div class="section-kicker">'
+            '01 · PANORAMA GEOGRÁFICO'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+        st.subheader(
+            "Distribución de las muestras"
+        )
+
+        st.caption(
+            "Lectura espacial del conjunto que cumple "
+            "los criterios definidos en la consulta."
+        )
 
 
-# ============================================================
-# MAPA
-# ============================================================
+        metric_1, metric_2, metric_3, metric_4 = (
+            st.columns(4)
+        )
 
-map_object = build_phase1_folium_map(
-    points=points,
-    class_filter=class_filter,
-)
+        metric_1.metric(
+            "Muestras",
+            f"{len(points):,}".replace(
+                ",",
+                ".",
+            ),
+        )
+
+        metric_2.metric(
+            "Grupos",
+            f"{visible_groups:,}".replace(
+                ",",
+                ".",
+            ),
+        )
+
+        metric_3.metric(
+            "Con detección",
+            f"{visible_positive:,}".replace(
+                ",",
+                ".",
+            ),
+        )
+
+        metric_4.metric(
+            "Sin detección",
+            f"{visible_negative:,}".replace(
+                ",",
+                ".",
+            ),
+        )
+
+        st.write("")
 
 
-map_key = (
-    f"product_map_"
-    f"{selected_season_year}_"
-    f"{region_filter}_"
-    f"{class_filter}_"
-    f"{reference_start}_"
-    f"{reference_end}_"
-    f"{multipatch_only}"
-)
+        # ----------------------------------------------------
+        # LEYENDA
+        # ----------------------------------------------------
+
+        if class_filter == "Todas":
+
+            legend_1, legend_2, legend_3 = (
+                st.columns(
+                    [1.15, 1.15, 1.7]
+                )
+            )
+
+            legend_1.markdown(
+                "🔴 **Con detección posterior**"
+            )
+
+            legend_2.markdown(
+                "🔵 **Sin detección cercana**"
+            )
+
+            legend_3.markdown(
+                "⚫ **Cluster de muestras**"
+            )
+
+        elif (
+            class_filter
+            == "Con detección posterior"
+        ):
+
+            st.markdown(
+                "🔴 **Con detección posterior**"
+            )
+
+        else:
+
+            st.markdown(
+                "🔵 **Sin detección cercana**"
+            )
 
 
-st_folium(
-    map_object,
-    height=620,
-    use_container_width=True,
-    returned_objects=[],
-    key=map_key,
-)
+        st.caption(
+            "Pasa el cursor sobre un cluster para "
+            "observar su cobertura y haz clic "
+            "para acercarte."
+        )
+
+
+        # ----------------------------------------------------
+        # MAPA
+        # ----------------------------------------------------
+
+        map_object = build_phase1_folium_map(
+            points=points,
+            class_filter=class_filter,
+        )
+
+        map_key = (
+            f"product_map_"
+            f"{selected_season_year}_"
+            f"{region_filter}_"
+            f"{class_filter}_"
+            f"{reference_start}_"
+            f"{reference_end}_"
+            f"{multipatch_only}"
+        )
+
+        st_folium(
+            map_object,
+            height=650,
+            use_container_width=True,
+            returned_objects=[],
+            key=map_key,
+        )
+
+
+    # ========================================================
+    # VISTA 02 — PARCHES
+    # ========================================================
+
+    else:
+
+        st.markdown(
+            '<div class="section-kicker">'
+            '02 · EXPLORACIÓN DE PARCHES'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+        st.subheader(
+            "Revisar una muestra"
+        )
+
+        st.caption(
+            "Selecciona un parche o un grupo para "
+            "consultar sus antecedentes principales."
+        )
+
+
+        # ----------------------------------------------------
+        # CATÁLOGO DE LA CONSULTA
+        # ----------------------------------------------------
+
+        visible_patch_ids = set(
+            points["patch_id"]
+            .astype(str)
+        )
+
+        filtered_catalog = catalog[
+            catalog["patch_id"]
+            .astype(str)
+            .isin(
+                visible_patch_ids
+            )
+        ].copy()
+
+
+        # ----------------------------------------------------
+        # MODO DE BÚSQUEDA
+        # ----------------------------------------------------
+
+        search_mode = st.segmented_control(
+            "Buscar por",
+            options=[
+                "Parche",
+                "Grupo",
+            ],
+            default="Parche",
+            key="patch_search_mode",
+        )
+
+        if search_mode is None:
+            search_mode = "Parche"
+
+
+        # ----------------------------------------------------
+        # PARCHE
+        # ----------------------------------------------------
+
+        if search_mode == "Parche":
+
+            patch_options = (
+                get_available_patch_ids(
+                    filtered_catalog
+                )
+            )
+
+            selected_patch_id = st.selectbox(
+                "Patch ID",
+                options=patch_options,
+                key="selected_patch",
+            )
+
+
+        # ----------------------------------------------------
+        # GRUPO
+        # ----------------------------------------------------
+
+        else:
+
+            group_options = (
+                get_available_group_ids(
+                    filtered_catalog
+                )
+            )
+
+            selected_group_id = st.selectbox(
+                "Grupo",
+                options=group_options,
+                key="selected_group",
+            )
+
+            group_patch_options = (
+                get_group_patch_ids(
+                    filtered_catalog,
+                    selected_group_id,
+                )
+            )
+
+            selected_patch_id = st.selectbox(
+                "Parche del grupo",
+                options=group_patch_options,
+                key="selected_group_patch",
+            )
+
+
+        # ----------------------------------------------------
+        # CARGAR PATCH
+        # ----------------------------------------------------
+
+        selected_patch = get_patch(
+            filtered_catalog,
+            selected_patch_id,
+        )
+
+
+        class_label = (
+            "Con detección posterior"
+            if int(
+                selected_patch["etiqueta"]
+            ) == 1
+            else "Sin detección cercana"
+        )
+
+        class_icon = (
+            "🔴"
+            if int(
+                selected_patch["etiqueta"]
+            ) == 1
+            else "🔵"
+        )
+
+        season_label = (
+            format_season_label(
+                int(
+                    selected_patch[
+                        "season_year"
+                    ]
+                )
+            )
+        )
+
+
+        # ----------------------------------------------------
+        # FICHA DEL PATCH
+        # ----------------------------------------------------
+
+        with st.container(
+            border=True,
+        ):
+
+            title_column, class_column = (
+                st.columns(
+                    [3, 1]
+                )
+            )
+
+            with title_column:
+
+                st.caption(
+                    "PARCHE SELECCIONADO"
+                )
+
+                st.subheader(
+                    str(
+                        selected_patch[
+                            "patch_id"
+                        ]
+                    )
+                )
+
+                if pd.notna(
+                    selected_patch["COMUNA"]
+                ):
+
+                    st.write(
+                        f"{selected_patch['COMUNA']} · "
+                        f"{selected_patch['REGION']}"
+                    )
+
+
+            with class_column:
+
+                st.caption(
+                    "CLASE"
+                )
+
+                st.write(
+                    f"{class_icon} "
+                    f"**{class_label}**"
+                )
+
+
+            st.divider()
+
+
+            detail_1, detail_2, detail_3 = (
+                st.columns(3)
+            )
+
+
+            with detail_1:
+
+                st.caption(
+                    "Temporada"
+                )
+
+                st.write(
+                    f"**{season_label}**"
+                )
+
+                st.caption(
+                    "Fecha de referencia"
+                )
+
+                st.write(
+                    f"**{format_date(selected_patch['fecha_referencia'])}**"
+                )
+
+
+            with detail_2:
+
+                st.caption(
+                    "Fecha objetivo pre-evento"
+                )
+
+                st.write(
+                    f"**{format_date(selected_patch['fecha_objetivo_pre_evento'])}**"
+                )
+
+                st.caption(
+                    "Imagen Sentinel-2"
+                )
+
+                st.write(
+                    f"**{format_date(selected_patch['fecha_imagen_seleccionada'])}**"
+                )
+
+
+            with detail_3:
+
+                st.caption(
+                    "Píxeles válidos"
+                )
+
+                st.write(
+                    f"**{format_percent(selected_patch['pct_pixeles_validos_patch'])}**"
+                )
+
+                st.caption(
+                    "Grupo"
+                )
+
+                st.write(
+                    f"**{selected_patch['group_id']}**"
+                )
+
+
+            group_size = int(
+                selected_patch[
+                    "n_patches_group_available"
+                ]
+            )
+
+            if group_size > 1:
+
+                st.info(
+                    f"Este grupo contiene "
+                    f"{group_size} parches disponibles."
+                )
