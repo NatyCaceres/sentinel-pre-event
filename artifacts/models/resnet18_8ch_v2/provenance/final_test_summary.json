@@ -1,0 +1,182 @@
+{
+  "status": "FINAL_TEST_COMPLETE",
+  "completed_at_utc": "2026-08-30T21:19:49.370725+00:00",
+  "n_test": 244,
+  "class_counts_test": {
+    "0": 118,
+    "1": 126
+  },
+  "models": {
+    "CNN Baseline 8CH": {
+      "checkpoint_sha256": "5d46b7dcccadd3ef64c9f9ea504711f5e5b58cbd1f5da2fb6f4d1cd9a300e8ae",
+      "threshold_validation": 0.64,
+      "run_dir": "/content/gdrive/MyDrive/Fase3_10_CNN_Baseline_8CH_v2_refactor/runs/cnn8ch_rot90"
+    },
+    "AlexNet 8CH": {
+      "checkpoint_sha256": "716ba0d19b6e59bbf484728e7016f4eaa8bab52de450801808defaf83594c197",
+      "threshold_validation": 0.5,
+      "run_dir": "/content/gdrive/MyDrive/Fase3_30_AlexNet_8CH_v2_refactor/runs/alexnet8ch_seed42"
+    },
+    "ResNet18 8CH": {
+      "checkpoint_sha256": "f044556b9865e88af594f14a8dd1cef4feea8fc203d90f8318c1827ddad5c155",
+      "threshold_validation": 0.49499999999999994,
+      "run_dir": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028"
+    },
+    "EfficientNet-B0 8CH": {
+      "checkpoint_sha256": "82ea68b03ec1e54424299eb32634bd932fdbbaee0c49b4c646d2494016980b90",
+      "threshold_validation": 0.5299999999999999,
+      "run_dir": "/content/gdrive/MyDrive/Fase3_Modelos_v1/EfficientNetB0_8CH_BASE_SOLIDA/run_20260829_220731"
+    },
+    "ResNet18 6CH": {
+      "checkpoint_sha256": "7c2d8716394fb4eba3aafeee15756d658f3c4468c95a7baa249a76319aef8db6",
+      "threshold_validation": 0.4749999999999999,
+      "run_dir": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_6CH_Ablacion_v1/run_20260829_225502"
+    }
+  },
+  "protocol": {
+    "manifest_sha256": "56a21b2e8c0d658d3b55b3bf06483d45a788a307c31685768f07e0997d3a9807",
+    "metadata_sha256": "f1262532fe0560c7be07f599c205d8e94962fa4c0fa5e30b1f127738fe752588",
+    "normalization_sha256": "5b03a2d6e7719da3c008dfee3fab32c1172101de3a8f9bb520a2b5592cca803a",
+    "patch_split_sha256": "538a5a30e0dca7c51e317a40966d510430e0f1a3be992a34fe4fc5329f29e135"
+  },
+  "primary_models_8ch": [
+    "CNN Baseline 8CH",
+    "AlexNet 8CH",
+    "ResNet18 8CH",
+    "EfficientNet-B0 8CH"
+  ],
+  "ablation_included": true,
+  "metrics_threshold_0_50": [
+    {
+      "Modelo": "CNN Baseline 8CH",
+      "Canales": 8,
+      "Threshold": 0.5,
+      "Accuracy": 0.7540983606557377,
+      "Precision": 0.7142857142857143,
+      "Recall": 0.873015873015873,
+      "F1": 0.7857142857142857,
+      "ROC-AUC": 0.8461124562819479,
+      "PR-AUC": 0.8502797946127978,
+      "Brier": 0.16239394334905558
+    },
+    {
+      "Modelo": "AlexNet 8CH",
+      "Canales": 8,
+      "Threshold": 0.5,
+      "Accuracy": 0.7581967213114754,
+      "Precision": 0.7218543046357616,
+      "Recall": 0.8650793650793651,
+      "F1": 0.7870036101083032,
+      "ROC-AUC": 0.8390503093892924,
+      "PR-AUC": 0.8358436390860606,
+      "Brier": 0.16216135799729037
+    },
+    {
+      "Modelo": "ResNet18 8CH",
+      "Canales": 8,
+      "Threshold": 0.5,
+      "Accuracy": 0.7827868852459017,
+      "Precision": 0.7829457364341085,
+      "Recall": 0.8015873015873016,
+      "F1": 0.792156862745098,
+      "ROC-AUC": 0.8654156577885391,
+      "PR-AUC": 0.8748153488315155,
+      "Brier": 0.15060020701031188
+    },
+    {
+      "Modelo": "EfficientNet-B0 8CH",
+      "Canales": 8,
+      "Threshold": 0.5,
+      "Accuracy": 0.7254098360655737,
+      "Precision": 0.7153284671532847,
+      "Recall": 0.7777777777777778,
+      "F1": 0.7452471482889734,
+      "ROC-AUC": 0.8136938391175679,
+      "PR-AUC": 0.8293375930064436,
+      "Brier": 0.18547674527307031
+    },
+    {
+      "Modelo": "ResNet18 6CH",
+      "Canales": 6,
+      "Threshold": 0.5,
+      "Accuracy": 0.7295081967213115,
+      "Precision": 0.7542372881355932,
+      "Recall": 0.7063492063492064,
+      "F1": 0.7295081967213115,
+      "ROC-AUC": 0.8028652138821629,
+      "PR-AUC": 0.8131548616814492,
+      "Brier": 0.18824744255328027
+    }
+  ],
+  "metrics_validation_threshold": [
+    {
+      "Modelo": "CNN Baseline 8CH",
+      "Canales": 8,
+      "Threshold": 0.64,
+      "Accuracy": 0.7418032786885246,
+      "Precision": 0.7603305785123967,
+      "Recall": 0.7301587301587301,
+      "F1": 0.7449392712550608,
+      "ROC-AUC": 0.8461124562819479,
+      "PR-AUC": 0.8502797946127978,
+      "Brier": 0.16239394334905558
+    },
+    {
+      "Modelo": "AlexNet 8CH",
+      "Canales": 8,
+      "Threshold": 0.5,
+      "Accuracy": 0.7581967213114754,
+      "Precision": 0.7218543046357616,
+      "Recall": 0.8650793650793651,
+      "F1": 0.7870036101083032,
+      "ROC-AUC": 0.8390503093892924,
+      "PR-AUC": 0.8358436390860606,
+      "Brier": 0.16216135799729037
+    },
+    {
+      "Modelo": "ResNet18 8CH",
+      "Canales": 8,
+      "Threshold": 0.49499999999999994,
+      "Accuracy": 0.7868852459016393,
+      "Precision": 0.7846153846153846,
+      "Recall": 0.8095238095238095,
+      "F1": 0.796875,
+      "ROC-AUC": 0.8654156577885391,
+      "PR-AUC": 0.8748153488315155,
+      "Brier": 0.15060020701031188
+    },
+    {
+      "Modelo": "EfficientNet-B0 8CH",
+      "Canales": 8,
+      "Threshold": 0.5299999999999999,
+      "Accuracy": 0.7254098360655737,
+      "Precision": 0.7185185185185186,
+      "Recall": 0.7698412698412699,
+      "F1": 0.7432950191570882,
+      "ROC-AUC": 0.8136938391175679,
+      "PR-AUC": 0.8293375930064436,
+      "Brier": 0.18547674527307031
+    },
+    {
+      "Modelo": "ResNet18 6CH",
+      "Canales": 6,
+      "Threshold": 0.4749999999999999,
+      "Accuracy": 0.7213114754098361,
+      "Precision": 0.7377049180327869,
+      "Recall": 0.7142857142857143,
+      "F1": 0.7258064516129032,
+      "ROC-AUC": 0.8028652138821629,
+      "PR-AUC": 0.8131548616814492,
+      "Brier": 0.18824744255328027
+    }
+  ],
+  "files": {
+    "predictions_all_models": "/content/gdrive/MyDrive/Fase3_90_Analisis_Comparacion_Modelos/tables/test_predictions_all_models.csv",
+    "metrics_050": "/content/gdrive/MyDrive/Fase3_90_Analisis_Comparacion_Modelos/tables/comparacion_test_modelos.csv",
+    "metrics_validation_threshold": "/content/gdrive/MyDrive/Fase3_90_Analisis_Comparacion_Modelos/tables/comparacion_test_threshold_validation.csv",
+    "bootstrap_test": "/content/gdrive/MyDrive/Fase3_90_Analisis_Comparacion_Modelos/tables/bootstrap_grouped_test_modelos.csv",
+    "paired_delta_auc": "/content/gdrive/MyDrive/Fase3_90_Analisis_Comparacion_Modelos/tables/comparacion_pareada_delta_auc_test.csv",
+    "season_analysis": "/content/gdrive/MyDrive/Fase3_90_Analisis_Comparacion_Modelos/tables/roc_auc_test_por_temporada.csv",
+    "error_analysis": "/content/gdrive/MyDrive/Fase3_90_Analisis_Comparacion_Modelos/tables/analisis_acuerdo_errores_test.csv"
+  }
+}

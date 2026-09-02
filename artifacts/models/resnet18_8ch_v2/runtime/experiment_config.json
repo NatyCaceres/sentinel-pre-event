@@ -1,0 +1,63 @@
+{
+  "model_name": "resnet18",
+  "model_tag": "ResNet18_8CH_v2",
+  "pretrained_requested": true,
+  "in_chans": 8,
+  "channels": [
+    "B2",
+    "B3",
+    "B4",
+    "B8",
+    "B11",
+    "B12",
+    "NDMI",
+    "NBR"
+  ],
+  "input_size": [
+    8,
+    64,
+    64
+  ],
+  "batch_size": 32,
+  "epochs_head": 10,
+  "lr_head": 0.001,
+  "epochs_fine": 25,
+  "lr_fine": 0.0001,
+  "weight_decay": 0.0001,
+  "dropout_rate": 0.2,
+  "early_stopping_policy": "local_per_phase",
+  "early_stopping_patience": 8,
+  "min_delta_auc": 0.0001,
+  "scheduler": {
+    "name": "ReduceLROnPlateau",
+    "mode": "max",
+    "factor": 0.5,
+    "patience": 3,
+    "min_lr": 1e-06,
+    "monitor": "validation_roc_auc"
+  },
+  "batchnorm": {
+    "freeze_running_stats_head": true,
+    "freeze_running_stats_fine": true,
+    "affine_parameters_trainable_in_fine": true
+  },
+  "grad_clip_norm": 1.0,
+  "seed": 42,
+  "class_weight": false,
+  "event_weight_column": "event_weight_model",
+  "event_weight_training_loss_only": true,
+  "augmentation": {
+    "hflip_p": 0.5,
+    "vflip_p": 0.5,
+    "rot90": false,
+    "only_train": true
+  },
+  "selection_metric": "validation_roc_auc",
+  "threshold_reference": 0.5,
+  "threshold_alternative_selected_only_on": "validation",
+  "protocol_manifest": "/content/gdrive/MyDrive/Fase3_Protocolo_Modelado_8CH_v1/artifacts/protocol_manifest_v1.json",
+  "protocol_manifest_sha256": "56a21b2e8c0d658d3b55b3bf06483d45a788a307c31685768f07e0997d3a9807",
+  "metadata_sha256": "f1262532fe0560c7be07f599c205d8e94962fa4c0fa5e30b1f127738fe752588",
+  "normalization_sha256": "5b03a2d6e7719da3c008dfee3fab32c1172101de3a8f9bb520a2b5592cca803a",
+  "test_locked_during_model_selection": true
+}

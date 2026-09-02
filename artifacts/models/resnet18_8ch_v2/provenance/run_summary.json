@@ -1,0 +1,43 @@
+{
+  "model": "ResNet18_8CH_v2",
+  "status": "trained_and_validation_frozen",
+  "output_dir": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028",
+  "checkpoint_path": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028/best_resnet18_8ch_v2.pt",
+  "checkpoint_sha256": "f044556b9865e88af594f14a8dd1cef4feea8fc203d90f8318c1827ddad5c155",
+  "history_path": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028/tables/history_resnet18_8ch_v2.csv",
+  "validation_predictions_path": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028/tables/validation_predictions.csv",
+  "threshold_path": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028/validation_threshold.json",
+  "model_selection_frozen_path": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028/model_selection_frozen.json",
+  "n_total": 1253,
+  "n_train": 819,
+  "n_validation": 190,
+  "n_test": 244,
+  "channels": [
+    "B2",
+    "B3",
+    "B4",
+    "B8",
+    "B11",
+    "B12",
+    "NDMI",
+    "NBR"
+  ],
+  "normalization_source": "/content/gdrive/MyDrive/Fase3_Protocolo_Modelado_8CH_v1/artifacts/normalizacion_model8ch_v1.json",
+  "event_weight_column": "event_weight_model",
+  "class_weight": false,
+  "batchnorm_running_stats_frozen_in_fine": true,
+  "validation_roc_auc_ci95": [
+    0.8080386000884572,
+    0.9121711169419149
+  ],
+  "validation_pr_auc_ci95": [
+    0.7906011574159528,
+    0.9277903057981975
+  ],
+  "efficiency_path": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028/tables/model_efficiency.csv",
+  "best_validation_roc_auc": 0.8654444444444445,
+  "best_threshold_validation": 0.49499999999999994,
+  "test_evaluated": false,
+  "protocol_manifest_sha256": "56a21b2e8c0d658d3b55b3bf06483d45a788a307c31685768f07e0997d3a9807",
+  "created_at_utc": "2026-08-30T19:45:37.633635+00:00"
+}

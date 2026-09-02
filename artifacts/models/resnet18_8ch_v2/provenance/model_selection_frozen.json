@@ -1,0 +1,42 @@
+{
+  "checkpoint_path": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028/best_resnet18_8ch_v2.pt",
+  "checkpoint_sha256": "f044556b9865e88af594f14a8dd1cef4feea8fc203d90f8318c1827ddad5c155",
+  "best_validation_roc_auc": 0.8654444444444445,
+  "best_epoch_global": 24,
+  "best_phase": "fine_tuning",
+  "best_threshold_validation": 0.49499999999999994,
+  "validation_metrics_threshold_0_5": {
+    "accuracy": 0.7947368421052632,
+    "precision": 0.7798165137614679,
+    "recall": 0.85,
+    "f1": 0.8133971291866029,
+    "roc_auc": 0.8654444444444445,
+    "pr_auc": 0.8689600420006999
+  },
+  "validation_metrics_best_threshold": {
+    "accuracy": 0.7947368421052632,
+    "precision": 0.7798165137614679,
+    "recall": 0.85,
+    "f1": 0.8133971291866029,
+    "roc_auc": 0.8654444444444445,
+    "pr_auc": 0.8689600420006999
+  },
+  "brier_validation": 0.15591187878973703,
+  "validation_bootstrap_grouped_ci_path": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028/tables/validation_bootstrap_grouped_ci.csv",
+  "validation_roc_auc_ci95": [
+    0.8080386000884572,
+    0.9121711169419149
+  ],
+  "validation_pr_auc_ci95": [
+    0.7906011574159528,
+    0.9277903057981975
+  ],
+  "efficiency_path": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028/tables/model_efficiency.csv",
+  "experiment_config_path": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028/experiment_config.json",
+  "experiment_config_sha256": "6460af11960738746d99b861e2d01fd0b71a36c1eec3b13e723662363ee97692",
+  "protocol_manifest_sha256": "56a21b2e8c0d658d3b55b3bf06483d45a788a307c31685768f07e0997d3a9807",
+  "metadata_sha256": "f1262532fe0560c7be07f599c205d8e94962fa4c0fa5e30b1f127738fe752588",
+  "normalization_sha256": "5b03a2d6e7719da3c008dfee3fab32c1172101de3a8f9bb520a2b5592cca803a",
+  "test_evaluated_at_freeze_time": false,
+  "frozen_at_utc": "2026-08-30T19:45:37.346289+00:00"
+}

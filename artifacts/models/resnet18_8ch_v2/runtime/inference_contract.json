@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "model": {
+    "framework": "pytorch",
+    "architecture_library": "timm",
+    "architecture": "resnet18",
+    "in_chans": 8,
+    "num_classes": 2,
+    "dropout_rate": 0.2,
+    "checkpoint_relative_path": "../best_resnet18_8ch_v2.pt",
+    "checkpoint_sha256": "f044556b9865e88af594f14a8dd1cef4feea8fc203d90f8318c1827ddad5c155"
+  },
+  "input": {
+    "product": "Sentinel-2 pre-event patch",
+    "shape": [
+      8,
+      64,
+      64
+    ],
+    "dtype": "float32",
+    "channels": [
+      "B2",
+      "B3",
+      "B4",
+      "B8",
+      "B11",
+      "B12",
+      "NDMI",
+      "NBR"
+    ]
+  },
+  "preprocessing": {
+    "order": [
+      "validate_structure_and_reject_infinity",
+      "clip_finite_values_per_channel",
+      "impute_nan_with_train_channel_mean",
+      "zscore_train_only",
+      "require_all_finite"
+    ],
+    "clip_ranges": {
+      "B2": [
+        0.0,
+        1.0
+      ],
+      "B3": [
+        0.0,
+        1.0
+      ],
+      "B4": [
+        0.0,
+        1.0
+      ],
+      "B8": [
+        0.0,
+        1.0
+      ],
+      "B11": [
+        0.0,
+        1.0
+      ],
+      "B12": [
+        0.0,
+        1.0
+      ],
+      "NDMI": [
+        -1.0,
+        1.0
+      ],
+      "NBR": [
+        -1.0,
+        1.0
+      ]
+    },
+    "nonfinite_policy": {
+      "nan": "impute_train_channel_mean",
+      "positive_infinity": "reject",
+      "negative_infinity": "reject",
+      "imputed_value_after_zscore": 0.0
+    },
+    "normalization": {
+      "method": "zscore",
+      "statistics_source": "train_only_819_patches_after_clipping",
+      "source_sha256": "5b03a2d6e7719da3c008dfee3fab32c1172101de3a8f9bb520a2b5592cca803a",
+      "mean": [
+        0.03954580798745155,
+        0.05997387692332268,
+        0.057100579142570496,
+        0.2696220278739929,
+        0.16657845675945282,
+        0.10155215859413147,
+        0.23251764476299286,
+        0.4526325464248657
+      ],
+      "std": [
+        0.03805823251605034,
+        0.04016797989606857,
+        0.04991178214550018,
+        0.08807603269815445,
+        0.06250499188899994,
+        0.0565846711397171,
+        0.2065434604883194,
+        0.24455134570598602
+      ]
+    }
+  },
+  "output": {
+    "activation": "softmax",
+    "class_order": [
+      {
+        "index": 0,
+        "name": "class_0",
+        "description": "Zona comparable sin detecciones cercanas posteriores de fuego activo bajo los controles definidos."
+      },
+      {
+        "index": 1,
+        "name": "class_1",
+        "description": "Zona con detecciones posteriores de fuego activo NASA FIRMS."
+      }
+    ],
+    "reported_score": "softmax_probability_class_1",
+    "decision_threshold": 0.49499999999999994,
+    "threshold_selected_on": "validation",
+    "threshold_criterion": "maximize_f1",
+    "decision_rule": "class_1_if_score_greater_than_or_equal_to_threshold",
+    "interpretation_notice": "El resultado clasifica patrones espectrales pre-evento según su asociación con las clases del estudio; no predice incendios ni representa riesgo absoluto."
+  }
+}

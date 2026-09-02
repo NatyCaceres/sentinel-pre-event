@@ -1,0 +1,39 @@
+{
+  "status": "COMPLETE",
+  "opened_at_utc": "2026-08-30T21:09:41.824127+00:00",
+  "completed_at_utc": "2026-08-30T21:19:49.390552+00:00",
+  "models": {
+    "CNN Baseline 8CH": {
+      "checkpoint_sha256": "5d46b7dcccadd3ef64c9f9ea504711f5e5b58cbd1f5da2fb6f4d1cd9a300e8ae",
+      "threshold_validation": 0.64,
+      "run_dir": "/content/gdrive/MyDrive/Fase3_10_CNN_Baseline_8CH_v2_refactor/runs/cnn8ch_rot90"
+    },
+    "AlexNet 8CH": {
+      "checkpoint_sha256": "716ba0d19b6e59bbf484728e7016f4eaa8bab52de450801808defaf83594c197",
+      "threshold_validation": 0.5,
+      "run_dir": "/content/gdrive/MyDrive/Fase3_30_AlexNet_8CH_v2_refactor/runs/alexnet8ch_seed42"
+    },
+    "ResNet18 8CH": {
+      "checkpoint_sha256": "f044556b9865e88af594f14a8dd1cef4feea8fc203d90f8318c1827ddad5c155",
+      "threshold_validation": 0.49499999999999994,
+      "run_dir": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_8CH_v2/run_20260830_173028"
+    },
+    "EfficientNet-B0 8CH": {
+      "checkpoint_sha256": "82ea68b03ec1e54424299eb32634bd932fdbbaee0c49b4c646d2494016980b90",
+      "threshold_validation": 0.5299999999999999,
+      "run_dir": "/content/gdrive/MyDrive/Fase3_Modelos_v1/EfficientNetB0_8CH_BASE_SOLIDA/run_20260829_220731"
+    },
+    "ResNet18 6CH": {
+      "checkpoint_sha256": "7c2d8716394fb4eba3aafeee15756d658f3c4468c95a7baa249a76319aef8db6",
+      "threshold_validation": 0.4749999999999999,
+      "run_dir": "/content/gdrive/MyDrive/Fase3_Modelos_v1/ResNet18_6CH_Ablacion_v1/run_20260829_225502"
+    }
+  },
+  "protocol": {
+    "manifest_sha256": "56a21b2e8c0d658d3b55b3bf06483d45a788a307c31685768f07e0997d3a9807",
+    "metadata_sha256": "f1262532fe0560c7be07f599c205d8e94962fa4c0fa5e30b1f127738fe752588",
+    "normalization_sha256": "5b03a2d6e7719da3c008dfee3fab32c1172101de3a8f9bb520a2b5592cca803a",
+    "patch_split_sha256": "538a5a30e0dca7c51e317a40966d510430e0f1a3be992a34fe4fc5329f29e135"
+  },
+  "final_summary_sha256": "a23b33655007712623b1fb2714fb4efc30b37e5a129e520116abbca3327db28b"
+}
