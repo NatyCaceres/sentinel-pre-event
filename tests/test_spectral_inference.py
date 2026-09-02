@@ -15,7 +15,9 @@ from src.spectral.inference import (
 from src.spectral.patch import (
     SpectralPatch,
     SpectralPatchError,
+    load_spectral_patch,
 )
+from src.spectral.storage import resolve_tif_path
 
 
 CHANNELS = (
@@ -32,6 +34,20 @@ SHAPE = (
     8,
     64,
     64,
+)
+REAL_TIFF_CASES = (
+    (
+        "model8__test__neg__P_2018_NEG_00015.tif",
+        True,
+    ),
+    (
+        "model8__test__pos__P_2019_POS_C0079_01.tif",
+        True,
+    ),
+    (
+        "model8__test__neg__P_2018_NEG_00014.tif",
+        False,
+    ),
 )
 
 
@@ -270,3 +286,45 @@ def test_checkpoint_hash_is_checked_before_loading(
         load_spectral_model(
             contract_path
         )
+
+
+@pytest.mark.parametrize(
+    ("tif_filename", "expected_nan"),
+    REAL_TIFF_CASES,
+)
+def test_real_tiff_end_to_end_inference(
+    loaded_model,
+    tif_filename: str,
+    expected_nan: bool,
+) -> None:
+    try:
+        tif_path = resolve_tif_path(
+            tif_filename
+        )
+    except FileNotFoundError:
+        pytest.skip(
+            "Los GeoTIFF locales no están disponibles."
+        )
+
+    patch = load_spectral_patch(
+        tif_path
+    )
+
+    assert bool(
+        np.isnan(patch.data).any()
+    ) is expected_nan
+
+    prediction = predict_spectral_patch(
+        patch,
+        loaded_model,
+    )
+
+    assert len(prediction.probabilities) == 2
+    assert sum(prediction.probabilities) == pytest.approx(
+        1.0
+    )
+    assert all(
+        np.isfinite(value)
+        for value in prediction.probabilities
+    )
+    assert prediction.predicted_class in (0, 1)
