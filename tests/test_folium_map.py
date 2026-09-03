@@ -8,6 +8,7 @@ from src.geo.folium_map import (
     POSITIVE_COLOR,
     Phase1MapError,
     build_phase1_folium_map,
+    extract_patch_id_from_popup,
     format_reference_date,
     get_cluster_color,
     get_marker_color,
@@ -106,6 +107,35 @@ def test_reference_date_is_formatted() -> None:
     )
 
     assert result == "15-01-2025"
+
+
+def test_patch_id_is_extracted_from_map_popup() -> None:
+    result = extract_patch_id_from_popup(
+        "PARCHE\nP_POS_001\nComuna: Comuna A"
+    )
+
+    assert result == "P_POS_001"
+
+
+def test_patch_id_extraction_trims_whitespace() -> None:
+    result = extract_patch_id_from_popup(
+        "  PARCHE  \n\n  P_POS_001  \nComuna: Comuna A"
+    )
+
+    assert result == "P_POS_001"
+
+
+def test_invalid_map_popups_do_not_select_patch() -> None:
+    for popup in (
+        None,
+        "",
+        "Popup sin identificador",
+        "PARCHE",
+    ):
+        assert (
+            extract_patch_id_from_popup(popup)
+            is None
+        )
 
 
 def test_empty_points_are_rejected() -> None:

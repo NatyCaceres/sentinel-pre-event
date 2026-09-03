@@ -8,7 +8,9 @@ from src.spectral.visualization import (
     SpectralVisualizationError,
     calculate_channel_statistics,
     percentile_stretch,
+    prepare_false_color,
     prepare_index,
+    prepare_index_display,
     prepare_rgb,
 )
 
@@ -225,4 +227,78 @@ def test_channel_statistics_ignore_nan() -> None:
 
     assert stats["mean"] == pytest.approx(
         1.0
+    )
+
+
+def test_prepare_false_color_has_expected_shape() -> None:
+    patch = build_patch()
+
+    false_color = prepare_false_color(
+        patch
+    )
+
+    assert false_color.shape == (
+        64,
+        64,
+        3,
+    )
+    assert false_color.dtype == np.float32
+    assert float(false_color.min()) >= 0.0
+    assert float(false_color.max()) <= 1.0
+
+
+@pytest.mark.parametrize(
+    "index_name",
+    ["NDMI", "NBR"],
+)
+def test_prepare_index_display_has_expected_shape(
+    index_name: str,
+) -> None:
+    patch = build_patch()
+
+    display = prepare_index_display(
+        patch,
+        index_name,
+    )
+
+    assert display.shape == (
+        64,
+        64,
+        3,
+    )
+    assert display.dtype == np.float32
+    assert float(display.min()) >= 0.0
+    assert float(display.max()) <= 1.0
+
+
+def test_prepare_index_display_marks_nan_as_black() -> None:
+    patch = build_patch()
+    patch.data[6, 0, 0] = np.nan
+
+    display = prepare_index_display(
+        patch,
+        "NDMI",
+    )
+
+    np.testing.assert_array_equal(
+        display[0, 0],
+        np.zeros(3, dtype=np.float32),
+    )
+
+
+def test_prepare_index_display_uses_viridis_extremes() -> None:
+    patch = build_patch()
+
+    display = prepare_index_display(
+        patch,
+        "NDMI",
+    )
+
+    np.testing.assert_allclose(
+        display[0, 0],
+        [0.267004, 0.004874, 0.329415],
+    )
+    np.testing.assert_allclose(
+        display[-1, -1],
+        [0.993248, 0.906157, 0.143936],
     )

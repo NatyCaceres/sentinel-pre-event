@@ -7,6 +7,7 @@ import pytest
 from src.data.product_catalog_loader import (
     ProductCatalogLoadError,
     load_product_catalog,
+    select_final_test_catalog,
 )
 
 
@@ -29,6 +30,10 @@ def build_valid_catalog() -> pd.DataFrame:
             "group_id": [
                 "EV_001",
                 "NEG_001",
+            ],
+            "subsplit": [
+                "test",
+                "train",
             ],
             "etiqueta": [
                 1,
@@ -252,4 +257,32 @@ def test_catalog_without_available_image_is_rejected(
             catalog_path,
             manifest_path,
             verify_integrity=False,
+        )
+
+
+def test_select_final_test_catalog_keeps_only_test_rows() -> None:
+    catalog = build_valid_catalog()
+
+    result = select_final_test_catalog(
+        catalog
+    )
+
+    assert result["patch_id"].tolist() == [
+        "P_001"
+    ]
+    assert result["subsplit"].tolist() == [
+        "test"
+    ]
+    assert len(catalog) == 2
+
+
+def test_select_final_test_catalog_rejects_missing_partition() -> None:
+    catalog = build_valid_catalog()
+    catalog["subsplit"] = "train"
+
+    with pytest.raises(
+        ProductCatalogLoadError
+    ):
+        select_final_test_catalog(
+            catalog
         )

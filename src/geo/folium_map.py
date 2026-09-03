@@ -20,6 +20,33 @@ class Phase1MapError(Exception):
     """
 
 
+def extract_patch_id_from_popup(
+    popup: object,
+) -> str | None:
+    """
+    Extrae el patch_id del popup devuelto por st_folium.
+
+    Streamlit-Folium entrega el contenido como texto plano. El
+    contrato del popup sitúa la etiqueta ``PARCHE`` y el patch_id
+    en líneas consecutivas.
+    """
+
+    if not isinstance(popup, str):
+        return None
+
+    lines = [
+        line.strip()
+        for line in popup.splitlines()
+        if line.strip()
+    ]
+
+    for index, line in enumerate(lines[:-1]):
+        if line == "PARCHE":
+            return lines[index + 1]
+
+    return None
+
+
 def get_cluster_color(class_filter: str) -> str:
     """
     Define el color de los clusters según la clase visible.

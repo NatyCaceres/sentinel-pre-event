@@ -18,6 +18,18 @@ SUPPORTED_INDICES = {
     "NBR",
 }
 
+VIRIDIS_COLORS = (
+    (0.267004, 0.004874, 0.329415),
+    (0.278826, 0.175490, 0.483397),
+    (0.229739, 0.322361, 0.545706),
+    (0.172719, 0.448791, 0.557885),
+    (0.127568, 0.566949, 0.550556),
+    (0.157851, 0.683765, 0.501686),
+    (0.369214, 0.788888, 0.382914),
+    (0.678489, 0.863742, 0.189503),
+    (0.993248, 0.906157, 0.143936),
+)
+
 
 class SpectralVisualizationError(Exception):
     """
@@ -190,6 +202,60 @@ def prepare_rgb(
     )
 
 
+def prepare_false_color(
+    patch: SpectralPatch,
+    *,
+    lower_percentile: float = DEFAULT_LOWER_PERCENTILE,
+    upper_percentile: float = DEFAULT_UPPER_PERCENTILE,
+) -> np.ndarray:
+    """
+    Construye una composición de falso color para vegetación:
+
+        R = B8 (infrarrojo cercano)
+        G = B4 (rojo)
+        B = B3 (verde)
+
+    Devuelve un array [alto, ancho, 3] en [0, 1].
+    """
+
+    try:
+        near_infrared = patch.channel("B8")
+        red = patch.channel("B4")
+        green = patch.channel("B3")
+
+    except SpectralPatchError as error:
+        raise SpectralVisualizationError(
+            "No fue posible construir falso color porque "
+            "faltan bandas requeridas."
+        ) from error
+
+    false_color = np.stack(
+        [
+            percentile_stretch(
+                near_infrared,
+                lower_percentile=lower_percentile,
+                upper_percentile=upper_percentile,
+            ),
+            percentile_stretch(
+                red,
+                lower_percentile=lower_percentile,
+                upper_percentile=upper_percentile,
+            ),
+            percentile_stretch(
+                green,
+                lower_percentile=lower_percentile,
+                upper_percentile=upper_percentile,
+            ),
+        ],
+        axis=-1,
+    )
+
+    return false_color.astype(
+        np.float32,
+        copy=False,
+    )
+
+
 def prepare_index(
     patch: SpectralPatch,
     index_name: str,
@@ -239,6 +305,72 @@ def prepare_index(
     )
 
     return index
+
+
+def prepare_index_display(
+    patch: SpectralPatch,
+    index_name: str,
+) -> np.ndarray:
+    """
+    Colorea NDMI o NBR con una escala visual fija [-1, 1].
+
+    La transformación genera únicamente una imagen RGB. Los
+    valores científicos devueltos por prepare_index no cambian.
+    Los píxeles no finitos se representan en negro.
+    """
+
+    index_name = str(index_name).upper()
+    index = prepare_index(
+        patch,
+        index_name,
+    )
+    finite_mask = np.isfinite(index)
+    display = np.zeros(
+        (*index.shape, 3),
+        dtype=np.float32,
+    )
+
+    if not finite_mask.any():
+        raise SpectralVisualizationError(
+            f"{index_name} no contiene valores finitos "
+            "para su visualización."
+        )
+
+    normalized = (
+        index[finite_mask] + 1.0
+    ) / 2.0
+    viridis = np.asarray(
+        VIRIDIS_COLORS,
+        dtype=np.float32,
+    )
+    viridis_positions = np.linspace(
+        0.0,
+        1.0,
+        len(VIRIDIS_COLORS),
+        dtype=np.float32,
+    )
+    colors = np.empty(
+        (normalized.size, 3),
+        dtype=np.float32,
+    )
+
+    for channel_index in range(3):
+        colors[:, channel_index] = np.interp(
+            normalized,
+            viridis_positions,
+            viridis[:, channel_index],
+        )
+
+    display[finite_mask] = colors
+
+    return np.clip(
+        display,
+        0.0,
+        1.0,
+    ).astype(
+        np.float32,
+        copy=False,
+    )
 
 
 def calculate_channel_statistics(

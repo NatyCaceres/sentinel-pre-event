@@ -19,6 +19,38 @@ class ProductCatalogLoadError(Exception):
     """
 
 
+FINAL_TEST_SUBSPLIT = "test"
+
+
+def select_final_test_catalog(
+    catalog: pd.DataFrame,
+) -> pd.DataFrame:
+    """
+    Selecciona la partición de test final congelada.
+
+    Esta partición es la única que debe exponerse como
+    conjunto de evaluación en el MVP.
+    """
+
+    if "subsplit" not in catalog.columns:
+        raise ProductCatalogLoadError(
+            "El catálogo no contiene la columna subsplit "
+            "necesaria para identificar el test final."
+        )
+
+    test_catalog = catalog[
+        catalog["subsplit"].astype(str)
+        == FINAL_TEST_SUBSPLIT
+    ].copy()
+
+    if test_catalog.empty:
+        raise ProductCatalogLoadError(
+            "El catálogo no contiene registros del test final."
+        )
+
+    return test_catalog.reset_index(drop=True)
+
+
 def load_catalog_manifest(
     manifest_path: Path | str = DEFAULT_CATALOG_MANIFEST_PATH,
 ) -> dict:
@@ -85,6 +117,7 @@ def load_product_catalog(
     required_columns = {
         "patch_id",
         "group_id",
+        "subsplit",
         "etiqueta",
         "lat_centro",
         "lon_centro",
