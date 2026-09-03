@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from functools import partial
+from html import escape
+from textwrap import dedent
 
 import pandas as pd
 import streamlit as st
@@ -112,36 +113,44 @@ def reset_group_patch_selection() -> None:
     )
 
 
-def activate_patch_from_map(
-    map_key: str,
-    valid_patch_ids: set[str],
+def show_explorer_view() -> None:
+    """Navega a la selección cartográfica de muestras."""
+
+    st.session_state["main_view"] = (
+        "01 · Explorar mapa"
+    )
+
+
+def show_analysis_view() -> None:
+    """Navega al análisis de la muestra activa."""
+
+    st.session_state["main_view"] = (
+        "02 · Analizar muestra"
+    )
+
+
+def commit_pending_map_patch(
 ) -> None:
-    """Activa el punto clicado antes de renderizar la ficha."""
+    """Confirma una selección del mapa antes de renderizar."""
 
-    map_state = st.session_state.get(
-        map_key,
-        {},
+    patch_id = st.session_state.pop(
+        "pending_map_patch_id",
+        None,
     )
 
-    if not isinstance(map_state, dict):
-        return
-
-    clicked_patch_id = extract_patch_id_from_popup(
-        map_state.get(
-            "last_object_clicked_popup"
-        )
-    )
-
-    if clicked_patch_id not in valid_patch_ids:
+    if patch_id is None:
         return
 
     st.session_state["patch_search_mode"] = "Parche"
-    st.session_state["manual_patch_id"] = clicked_patch_id
-    st.session_state["active_patch_id"] = clicked_patch_id
+    st.session_state["manual_patch_id"] = str(patch_id)
+    st.session_state["active_patch_id"] = str(patch_id)
     st.session_state.pop(
         "spectral_prediction",
         None,
     )
+
+
+commit_pending_map_patch()
 
 
 # ============================================================
@@ -218,118 +227,160 @@ maximum_reference_date = (
 
 
 # ============================================================
-# LAYOUT PRINCIPAL
+# BARRA LATERAL DE EXPLORACIÓN
 # ============================================================
 
-filters_column, content_column = st.columns(
-    [0.72, 3.28],
-    gap="large",
-)
+with st.sidebar:
 
-
-# ============================================================
-# PANEL IZQUIERDO
-# ============================================================
-
-with filters_column:
-
-    st.markdown(
-        '<div class="filters-sticky-anchor"></div>',
-        unsafe_allow_html=True,
+    st.caption(
+        "CONFIGURAR EXPLORACIÓN"
     )
 
-    with st.container(
-        border=True,
+    st.header(
+        "Seleccionar muestras"
+    )
+
+    st.caption(
+        "Filtra por temporada, región o clase. También "
+        "puedes buscar una muestra específica."
+    )
+
+    with st.form(
+        "explorer_query_form",
+        border=False,
     ):
 
-        st.markdown(
-            '<div class="filters-panel-anchor"></div>',
-            unsafe_allow_html=True,
+        selected_season_label = st.selectbox(
+            "Temporada",
+            options=[
+                "Todas"
+            ] + list(
+                season_labels.keys()
+            ),
+            index=0,
+            key="query_season",
         )
 
-        st.caption(
-            "01 · FILTRAR MUESTRAS"
+        selected_region = st.selectbox(
+            "Región",
+            options=[
+                "Todas"
+            ] + region_options,
+            index=0,
+            key="query_region",
         )
 
-        st.markdown(
-            "### Nueva consulta"
+        class_filter = st.selectbox(
+            "Clase",
+            options=[
+                "Todas",
+                "Con detección posterior",
+                "Sin detección cercana",
+            ],
+            index=0,
+            key="query_class",
         )
 
-        st.caption(
-            "Ajusta los criterios de exploración."
-        )
-
-        with st.form(
-            "explorer_query_form",
-            border=False,
+        with st.expander(
+            "Más filtros",
+            expanded=False,
         ):
 
-            selected_season_label = st.selectbox(
-                "Temporada",
-                options=[
-                    "Todas"
-                ] + list(
-                    season_labels.keys()
+            selected_dates = st.date_input(
+                "Fecha de referencia",
+                value=(
+                    minimum_reference_date,
+                    maximum_reference_date,
                 ),
-                index=0,
-                key="query_season",
+                min_value=minimum_reference_date,
+                max_value=maximum_reference_date,
+                key="query_dates",
             )
 
-            selected_region = st.selectbox(
-                "Región",
-                options=[
-                    "Todas"
-                ] + region_options,
-                index=0,
-                key="query_region",
+            multipatch_only = st.checkbox(
+                "Solo grupos multipatch",
+                value=False,
+                key="query_multipatch",
+                help=(
+                    "Conserva únicamente grupos "
+                    "con más de un parche disponible."
+                ),
             )
 
-            class_filter = st.selectbox(
-                "Clase",
-                options=[
-                    "Todas",
-                    "Con detección posterior",
-                    "Sin detección cercana",
-                ],
-                index=0,
-                key="query_class",
+        st.form_submit_button(
+            "Actualizar mapa",
+            type="primary",
+            use_container_width=True,
+        )
+
+    st.divider()
+
+    st.caption(
+        "BÚSQUEDA DIRECTA"
+    )
+
+    search_mode = st.segmented_control(
+        "Buscar por",
+        options=[
+            "Parche",
+            "Grupo",
+        ],
+        default="Parche",
+        key="patch_search_mode",
+    )
+
+    if search_mode is None:
+        search_mode = "Parche"
+
+    if search_mode == "Parche":
+
+        patch_options = get_available_patch_ids(
+            test_catalog
+        )
+
+        st.selectbox(
+            "ID del parche",
+            options=patch_options,
+            index=None,
+            placeholder="Selecciona un parche",
+            key="manual_patch_id",
+            on_change=activate_patch_from_widget,
+            args=("manual_patch_id",),
+        )
+
+    else:
+
+        group_options = get_available_group_ids(
+            test_catalog
+        )
+
+        selected_group_id = st.selectbox(
+            "Grupo",
+            options=group_options,
+            index=None,
+            placeholder="Selecciona un grupo",
+            key="selected_group",
+            on_change=reset_group_patch_selection,
+        )
+
+        if selected_group_id is not None:
+
+            group_patch_options = get_group_patch_ids(
+                test_catalog,
+                selected_group_id,
             )
 
-            # Los controles menos utilizados se mantienen
-            # disponibles sin ocupar permanentemente espacio.
-            with st.expander(
-                "Más filtros",
-                expanded=False,
-            ):
-
-                selected_dates = st.date_input(
-                    "Fecha de referencia",
-                    value=(
-                        minimum_reference_date,
-                        maximum_reference_date,
-                    ),
-                    min_value=minimum_reference_date,
-                    max_value=maximum_reference_date,
-                    key="query_dates",
-                )
-
-                multipatch_only = st.checkbox(
-                    "Solo grupos multipatch",
-                    value=False,
-                    key="query_multipatch",
-                    help=(
-                        "Conserva únicamente grupos "
-                        "con más de un parche disponible."
-                    ),
-                )
-
-            st.write("")
-
-            st.form_submit_button(
-                "Aplicar filtros",
-                type="primary",
-                use_container_width=True,
+            st.selectbox(
+                "Parche del grupo",
+                options=group_patch_options,
+                index=None,
+                placeholder="Selecciona un parche",
+                key="selected_group_patch",
+                on_change=activate_patch_from_widget,
+                args=("selected_group_patch",),
             )
+
+
 # ============================================================
 # TRADUCCIÓN DE FILTROS
 # ============================================================
@@ -393,10 +444,10 @@ points = apply_explorer_filters(
 
 
 # ============================================================
-# CONTENIDO DERECHO
+# CONTENIDO PRINCIPAL
 # ============================================================
 
-with content_column:
+with st.container():
 
     # --------------------------------------------------------
     # APP BAR
@@ -419,7 +470,7 @@ with content_column:
 
         st.markdown(
             '<div class="validated-status">'
-            '🟢 Test final congelado<br>'
+            '🟢 Análisis espectral del terreno<br>'
             f'{len(test_catalog)} parches · 8 canales'
             '</div>',
             unsafe_allow_html=True,
@@ -439,15 +490,407 @@ with content_column:
 
     st.markdown(
         '<div class="product-subtitle">'
-        'Explora las muestras del test final Sentinel-2 pre-evento, '
-        'revisa su contexto territorial y posteriormente '
-        'analiza sus características espectrales '
-        'mediante deep learning.'
+        'Filtra el test final, selecciona un punto del mapa '
+        'y analiza su patrón espectral pre-evento.'
         '</div>',
         unsafe_allow_html=True,
     )
 
     st.write("")
+
+    main_view = st.segmented_control(
+        "Etapa del flujo",
+        options=[
+            "01 · Explorar mapa",
+            "02 · Analizar muestra",
+        ],
+        default="01 · Explorar mapa",
+        key="main_view",
+        label_visibility="collapsed",
+    )
+
+    if main_view is None:
+        main_view = "01 · Explorar mapa"
+
+    selected_patch_id = st.session_state.get(
+        "active_patch_id"
+    )
+
+    selected_patch = (
+        get_patch(
+            test_catalog,
+            selected_patch_id,
+        )
+        if selected_patch_id is not None
+        else None
+    )
+
+
+    # --------------------------------------------------------
+    # VISTA DE ANÁLISIS
+    # --------------------------------------------------------
+
+    if main_view == "02 · Analizar muestra":
+
+        st.markdown(
+            '<div class="section-kicker">'
+            '02 · ANALIZAR MUESTRA'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+        heading_column, back_column = st.columns(
+            [4, 1]
+        )
+
+        with heading_column:
+
+            st.subheader("Muestra seleccionada")
+
+            st.caption(
+                "Revisa sus antecedentes y ejecuta el modelo "
+                "sobre los ocho canales del GeoTIFF."
+            )
+
+        with back_column:
+
+            st.button(
+                "← Volver al mapa",
+                on_click=show_explorer_view,
+                use_container_width=True,
+            )
+
+        if selected_patch is None:
+
+            st.info(
+                "Primero selecciona un punto del mapa o busca "
+                "un parche del test final en la barra lateral."
+            )
+
+            st.button(
+                "Explorar muestras",
+                type="primary",
+                on_click=show_explorer_view,
+            )
+
+            st.stop()
+
+        spectral_patch = None
+        spectral_patch_error = None
+
+        try:
+
+            selected_tif_path = resolve_patch_tif(
+                selected_patch
+            )
+
+            spectral_patch = load_spectral_patch(
+                selected_tif_path
+            )
+
+        except (
+            FileNotFoundError,
+            SpectralStorageError,
+            SpectralPatchError,
+        ) as error:
+
+            spectral_patch_error = error
+
+        class_label = (
+            "Con detección posterior"
+            if int(selected_patch["etiqueta"]) == 1
+            else "Sin detección cercana"
+        )
+
+        class_icon = (
+            "🔴"
+            if int(selected_patch["etiqueta"]) == 1
+            else "🔵"
+        )
+
+        season_label = format_season_label(
+            int(selected_patch["season_year"])
+        )
+
+        patch_label = escape(
+            str(selected_patch["patch_id"])
+        )
+        safe_class_label = escape(class_label)
+        location_label = (
+            escape(str(selected_patch["COMUNA"]))
+            if pd.notna(selected_patch["COMUNA"])
+            else "Sin asignación administrativa"
+        )
+        region_label = (
+            escape(str(selected_patch["REGION"]))
+            if pd.notna(selected_patch["REGION"])
+            else "Ubicación no disponible"
+        )
+        observed_class_modifier = (
+            "positive"
+            if int(selected_patch["etiqueta"]) == 1
+            else "negative"
+        )
+        group_size = int(
+            selected_patch["n_patches_group_available"]
+        )
+        group_note = (
+            f"{group_size} parches disponibles en este grupo"
+            if group_size > 1
+            else "Muestra única disponible en este grupo"
+        )
+
+        st.markdown(
+            dedent(
+                f"""
+            <section class="sample-profile">
+                <div class="sample-profile__hero">
+                    <div>
+                        <div class="sample-profile__eyebrow">
+                            PARCHE SELECCIONADO
+                        </div>
+                        <div class="sample-profile__id">{patch_label}</div>
+                        <div class="sample-profile__place">
+                            {location_label} · {region_label}
+                        </div>
+                    </div>
+                    <div class="observed-class observed-class--{observed_class_modifier}">
+                        <span class="observed-class__label">CLASE OBSERVADA</span>
+                        <span class="observed-class__value">
+                            {class_icon} {safe_class_label}
+                        </span>
+                    </div>
+                </div>
+                <div class="sample-profile__facts">
+                    <div><span>Temporada</span><strong>{escape(season_label)}</strong></div>
+                    <div><span>Fecha de referencia</span><strong>{escape(format_date(selected_patch['fecha_referencia']))}</strong></div>
+                    <div><span>Objetivo pre-evento</span><strong>{escape(format_date(selected_patch['fecha_objetivo_pre_evento']))}</strong></div>
+                    <div><span>Imagen Sentinel-2</span><strong>{escape(format_date(selected_patch['fecha_imagen_seleccionada']))}</strong></div>
+                    <div><span>Píxeles válidos</span><strong>{escape(format_percent(selected_patch['pct_pixeles_validos_patch']))}</strong></div>
+                    <div><span>Grupo</span><strong>{escape(str(selected_patch['group_id']))}</strong></div>
+                </div>
+                <div class="sample-profile__note">{escape(group_note)}</div>
+            </section>
+            """
+            ),
+            unsafe_allow_html=True,
+        )
+
+        with st.container(key="rgb_preview_panel"):
+
+            with st.expander(
+                "Ver imagen RGB del parche seleccionado"
+            ):
+
+                if spectral_patch is None:
+
+                    st.error(
+                        "No fue posible cargar la imagen "
+                        "del parche seleccionado."
+                    )
+                    st.caption(str(spectral_patch_error))
+
+                else:
+
+                    try:
+
+                        rgb_image = prepare_rgb(spectral_patch)
+                        image_column, note_column = st.columns(
+                            [1, 2],
+                            gap="large",
+                            vertical_alignment="center",
+                        )
+
+                        with image_column:
+                            st.image(
+                                rgb_image,
+                                width=256,
+                            )
+
+                        with note_column:
+                            st.caption("VISUALIZACIÓN COMPLEMENTARIA")
+                            st.subheader("RGB natural")
+                            st.write("Composición Sentinel-2 B4/B3/B2.")
+                            st.caption(
+                                "El contraste percentil 2–98 se aplica "
+                                "solo para visualización y no forma parte "
+                                "del preprocesamiento del modelo."
+                            )
+
+                    except SpectralVisualizationError as error:
+
+                        st.error(
+                            "No fue posible construir la vista RGB."
+                        )
+                        st.caption(str(error))
+
+        st.write("")
+
+        with st.container(
+            border=False,
+            key="prediction_panel",
+        ):
+
+            st.markdown(
+                dedent(
+                    """
+                <div class="prediction-intro">
+                    <div class="prediction-intro__mark">IA</div>
+                    <div>
+                        <div class="prediction-intro__eyebrow">
+                            ANÁLISIS MEDIANTE RESNET18
+                        </div>
+                        <div class="prediction-intro__title">
+                            Clasificar el patrón espectral
+                        </div>
+                        <div class="prediction-intro__copy">
+                            El modelo analiza los ocho canales del GeoTIFF
+                            y fue validado durante la Fase 3.
+                        </div>
+                    </div>
+                </div>
+                """
+                ),
+                unsafe_allow_html=True,
+            )
+
+            analyze_patch = st.button(
+                "Analizar patrón espectral",
+                type="primary",
+                key="analyze_spectral_patch",
+                disabled=spectral_patch is None,
+            )
+
+            prediction_state_key = "spectral_prediction"
+
+            if analyze_patch:
+
+                st.session_state.pop(
+                    prediction_state_key,
+                    None,
+                )
+
+                try:
+
+                    with st.spinner(
+                        "Cargando y analizando el parche..."
+                    ):
+
+                        loaded_model = load_cached_spectral_model()
+                        prediction = predict_spectral_patch(
+                            spectral_patch,
+                            loaded_model,
+                        )
+
+                    st.session_state[prediction_state_key] = {
+                        "patch_id": str(selected_patch["patch_id"]),
+                        "prediction": prediction,
+                    }
+
+                except (
+                    FileNotFoundError,
+                    SpectralStorageError,
+                    SpectralPatchError,
+                    SpectralInferenceError,
+                ) as error:
+
+                    st.error(
+                        "No fue posible analizar el parche "
+                        "seleccionado."
+                    )
+                    st.caption(str(error))
+
+            prediction_state = st.session_state.get(
+                prediction_state_key
+            )
+            current_patch_id = str(selected_patch["patch_id"])
+
+            if (
+                prediction_state is not None
+                and prediction_state["patch_id"]
+                == current_patch_id
+            ):
+
+                prediction = prediction_state["prediction"]
+                score_0, score_1 = prediction.probabilities
+
+                predicted_label = (
+                    "Patrón asociado a clase 1"
+                    if prediction.predicted_class == 1
+                    else "Patrón asociado a clase 0"
+                )
+
+                score_0_percent = max(
+                    0.0,
+                    min(100.0, float(score_0) * 100),
+                )
+                score_1_percent = max(
+                    0.0,
+                    min(100.0, float(score_1) * 100),
+                )
+                predicted_modifier = (
+                    "positive"
+                    if prediction.predicted_class == 1
+                    else "negative"
+                )
+
+                st.markdown(
+                    dedent(
+                        f"""
+                    <div class="prediction-result prediction-result--{predicted_modifier}">
+                        <div class="prediction-result__eyebrow">
+                            CLASIFICACIÓN DEL MODELO
+                        </div>
+                        <div class="prediction-result__title">
+                            {escape(predicted_label)}
+                        </div>
+                        <div class="probability-row">
+                            <div class="probability-row__label">
+                                <span>Clase 0 · Sin detección cercana</span>
+                                <strong>{score_0_percent:.1f} %</strong>
+                            </div>
+                            <div class="probability-track">
+                                <span class="probability-fill probability-fill--negative"
+                                      style="width: {score_0_percent:.3f}%"></span>
+                            </div>
+                        </div>
+                        <div class="probability-row">
+                            <div class="probability-row__label">
+                                <span>Clase 1 · Con detección posterior</span>
+                                <strong>{score_1_percent:.1f} %</strong>
+                            </div>
+                            <div class="probability-track">
+                                <span class="probability-fill probability-fill--positive"
+                                      style="width: {score_1_percent:.3f}%"></span>
+                            </div>
+                        </div>
+                    </div>
+                    """
+                    ),
+                    unsafe_allow_html=True,
+                )
+                st.caption(
+                    "Decisión obtenida con el umbral "
+                    f"congelado de validación "
+                    f"({prediction.threshold:.3f})."
+                )
+                st.markdown(
+                    dedent(
+                        """
+                        <div class="scope-note">
+                            <strong>Alcance del resultado</strong>
+                            <span>
+                                Clasifica patrones espectrales pre-evento
+                                según su asociación con las clases del estudio.
+                                No predice incendios ni representa riesgo absoluto.
+                            </span>
+                        </div>
+                        """
+                    ),
+                    unsafe_allow_html=True,
+                )
+
+        st.stop()
 
 
     # --------------------------------------------------------
@@ -485,86 +928,72 @@ with content_column:
     )
 
 
-    map_column, analysis_column = st.columns(
-        [2.05, 1.0],
-        gap="large",
-    )
-
-
     # ========================================================
     # MAPA PRINCIPAL
     # ========================================================
 
-    with map_column:
+    with st.container():
 
         st.markdown(
             '<div class="section-kicker">'
-            '02 · SELECCIONAR EN EL MAPA'
+            'EXPLORACIÓN GEOGRÁFICA'
             '</div>',
             unsafe_allow_html=True,
         )
 
         st.subheader(
-            "Distribución de las muestras"
+            "Explorar muestras en el mapa"
         )
 
         st.caption(
-            "Acércate a un cluster y pulsa un punto para "
-            "enviar esa muestra al panel de análisis."
+            "Acércate a un grupo y selecciona un punto para "
+            "revisar su muestra."
         )
-
-        st.caption(
-            f"{len(points):,} muestras · "
-            f"{visible_groups:,} grupos · "
-            f"{visible_positive:,} con detección posterior · "
-            f"{visible_negative:,} sin detección cercana"
-        )
-
-
-        # ----------------------------------------------------
-        # LEYENDA
-        # ----------------------------------------------------
 
         if class_filter == "Todas":
-
-            legend_1, legend_2, legend_3 = (
-                st.columns(
-                    [1.15, 1.15, 1.7]
-                )
+            legend_items = (
+                '<span><i class="legend-dot legend-dot--positive"></i>'
+                'Con detección posterior</span>'
+                '<span><i class="legend-dot legend-dot--negative"></i>'
+                'Sin detección cercana</span>'
+                '<span><i class="legend-dot legend-dot--cluster"></i>'
+                'Grupo de muestras</span>'
             )
-
-            legend_1.markdown(
-                "🔴 **Con detección posterior**"
+        elif class_filter == "Con detección posterior":
+            legend_items = (
+                '<span><i class="legend-dot legend-dot--positive"></i>'
+                'Con detección posterior</span>'
+                '<span><i class="legend-dot legend-dot--cluster"></i>'
+                'Grupo de muestras</span>'
             )
-
-            legend_2.markdown(
-                "🔵 **Sin detección cercana**"
-            )
-
-            legend_3.markdown(
-                "⚫ **Cluster de muestras**"
-            )
-
-        elif (
-            class_filter
-            == "Con detección posterior"
-        ):
-
-            st.markdown(
-                "🔴 **Con detección posterior**"
-            )
-
         else:
-
-            st.markdown(
-                "🔵 **Sin detección cercana**"
+            legend_items = (
+                '<span><i class="legend-dot legend-dot--negative"></i>'
+                'Sin detección cercana</span>'
+                '<span><i class="legend-dot legend-dot--cluster"></i>'
+                'Grupo de muestras</span>'
             )
 
-
-        st.caption(
-            "Pasa el cursor sobre un cluster para "
-            "observar su cobertura y haz clic "
-            "para acercarte."
+        st.markdown(
+            dedent(
+                f"""
+                <div class="map-context-bar">
+                    <div class="map-context-bar__count">
+                        <strong>{len(points):,}</strong> muestras
+                        <span>·</span>
+                        <strong>{visible_groups:,}</strong> grupos
+                        <span>·</span>
+                        {visible_positive:,} clase 1
+                        <span>·</span>
+                        {visible_negative:,} clase 0
+                    </div>
+                    <div class="map-context-bar__legend">
+                        {legend_items}
+                    </div>
+                </div>
+                """
+            ),
+            unsafe_allow_html=True,
         )
 
 
@@ -591,524 +1020,130 @@ with content_column:
             points["patch_id"].astype(str)
         )
 
-        st_folium(
+        map_state = st_folium(
             map_object,
-            height=650,
+            height=560,
             use_container_width=True,
             returned_objects=[
                 "last_object_clicked_popup",
             ],
             key=map_key,
-            on_change=partial(
-                activate_patch_from_map,
-                map_key,
-                visible_patch_ids,
+        )
+
+        clicked_patch_id = extract_patch_id_from_popup(
+            map_state.get(
+                "last_object_clicked_popup"
             )
+            if isinstance(map_state, dict)
+            else None
         )
 
-    # ========================================================
-    # PANEL DE SELECCIÓN Y ANÁLISIS
-    # ========================================================
-
-    with analysis_column:
-
-        st.markdown(
-            '<div class="section-kicker">'
-            '03 · ANALIZAR MUESTRA'
-            '</div>',
-            unsafe_allow_html=True,
+        map_selection_token = (
+            map_key,
+            clicked_patch_id,
         )
 
-        st.subheader(
-            "Muestra seleccionada"
-        )
-
-        st.caption(
-            "Selecciona un punto en el mapa o utiliza "
-            "la búsqueda manual."
-        )
-
-
-        # ----------------------------------------------------
-        # CATÁLOGO DE LA CONSULTA
-        # ----------------------------------------------------
-
-        filtered_catalog = test_catalog.copy()
-
-
-        # ----------------------------------------------------
-        # MODO DE BÚSQUEDA
-        # ----------------------------------------------------
-
-        with st.expander(
-            f"Búsqueda manual en test final ({len(test_catalog)})",
-            expanded=False,
+        if (
+            clicked_patch_id in visible_patch_ids
+            and map_selection_token
+            != st.session_state.get(
+                "last_processed_map_selection"
+            )
         ):
+            st.session_state[
+                "pending_map_patch_id"
+            ] = clicked_patch_id
+            st.session_state[
+                "last_processed_map_selection"
+            ] = map_selection_token
+            st.rerun()
 
-            search_mode = st.segmented_control(
-                "Buscar por",
-                options=[
-                    "Parche",
-                    "Grupo",
-                ],
-                default="Parche",
-                key="patch_search_mode",
-            )
+    # ========================================================
+    # RESUMEN DE LA MUESTRA ACTIVA
+    # ========================================================
 
-            if search_mode is None:
-                search_mode = "Parche"
+    st.write("")
 
-            if search_mode == "Parche":
+    st.markdown(
+        '<div class="section-kicker">'
+        'MUESTRA SELECCIONADA'
+        '</div>',
+        unsafe_allow_html=True,
+    )
 
-                patch_options = (
-                    get_available_patch_ids(
-                        filtered_catalog
-                    )
-                )
+    if selected_patch is None:
 
-                selected_patch_id = st.selectbox(
-                    "Patch ID",
-                    options=patch_options,
-                    index=None,
-                    placeholder="Selecciona un parche",
-                    key="manual_patch_id",
-                    on_change=activate_patch_from_widget,
-                    args=("manual_patch_id",),
-                )
-
-            else:
-
-                group_options = (
-                    get_available_group_ids(
-                        filtered_catalog
-                    )
-                )
-
-                selected_group_id = st.selectbox(
-                    "Grupo",
-                    options=group_options,
-                    index=None,
-                    placeholder="Selecciona un grupo",
-                    key="selected_group",
-                    on_change=reset_group_patch_selection,
-                )
-
-                if selected_group_id is not None:
-
-                    group_patch_options = (
-                        get_group_patch_ids(
-                            filtered_catalog,
-                            selected_group_id,
-                        )
-                    )
-
-                    selected_patch_id = st.selectbox(
-                        "Parche del grupo",
-                        options=group_patch_options,
-                        index=None,
-                        placeholder="Selecciona un parche",
-                        key="selected_group_patch",
-                        on_change=activate_patch_from_widget,
-                        args=("selected_group_patch",),
-                    )
-
-
-        selected_patch_id = st.session_state.get(
-            "active_patch_id"
+        st.info(
+            "Selecciona un punto del mapa o busca un "
+            "parche del test final para continuar."
         )
 
-        if selected_patch_id is None:
-            st.info(
-                "Selecciona un punto del mapa o busca un "
-                "parche del test final para comenzar."
-            )
-            st.stop()
+    else:
 
-
-        # ----------------------------------------------------
-        # CARGAR PATCH
-        # ----------------------------------------------------
-
-        selected_patch = get_patch(
-            test_catalog,
-            selected_patch_id,
-        )
-
-
-        spectral_patch = None
-        spectral_patch_error = None
-
-        try:
-
-            selected_tif_path = resolve_patch_tif(
-                selected_patch
-            )
-
-            spectral_patch = load_spectral_patch(
-                selected_tif_path
-            )
-
-        except (
-            FileNotFoundError,
-            SpectralStorageError,
-            SpectralPatchError,
-        ) as error:
-
-            spectral_patch_error = error
-
-
-        class_label = (
+        selected_class_label = (
             "Con detección posterior"
-            if int(
-                selected_patch["etiqueta"]
-            ) == 1
+            if int(selected_patch["etiqueta"]) == 1
             else "Sin detección cercana"
         )
 
-        class_icon = (
+        selected_class_icon = (
             "🔴"
-            if int(
-                selected_patch["etiqueta"]
-            ) == 1
+            if int(selected_patch["etiqueta"]) == 1
             else "🔵"
         )
-
-        season_label = (
-            format_season_label(
-                int(
-                    selected_patch[
-                        "season_year"
-                    ]
-                )
-            )
+        summary_location = (
+            escape(str(selected_patch["COMUNA"]))
+            if pd.notna(selected_patch["COMUNA"])
+            else "Sin asignación administrativa"
+        )
+        summary_region = (
+            escape(str(selected_patch["REGION"]))
+            if pd.notna(selected_patch["REGION"])
+            else "Ubicación no disponible"
         )
 
-
-        # ----------------------------------------------------
-        # FICHA DEL PATCH
-        # ----------------------------------------------------
-
         with st.container(
-            border=True,
+            border=False,
             key=(
-                "selected_patch_card_"
+                "explorer_selection_panel_"
                 f"{selected_patch_id}"
             ),
         ):
 
-            title_column = st.container()
-            class_column = st.container()
-
-            with title_column:
-
-                st.caption(
-                    "PARCHE SELECCIONADO"
-                )
-
-                st.subheader(
-                    str(
-                        selected_patch[
-                            "patch_id"
-                        ]
-                    )
-                )
-
-                if pd.notna(
-                    selected_patch["COMUNA"]
-                ):
-
-                    st.write(
-                        f"{selected_patch['COMUNA']} · "
-                        f"{selected_patch['REGION']}"
-                    )
-
-
-            with class_column:
-
-                st.caption(
-                    "CLASE OBSERVADA"
-                )
-
-                st.write(
-                    f"{class_icon} "
-                    f"**{class_label}**"
-                )
-
-
-            st.divider()
-
-
-            detail_1 = st.container()
-            detail_2 = st.container()
-            detail_3 = st.container()
-
-
-            with detail_1:
-
-                st.caption(
-                    "Temporada"
-                )
-
-                st.write(
-                    f"**{season_label}**"
-                )
-
-                st.caption(
-                    "Fecha de referencia"
-                )
-
-                st.write(
-                    f"**{format_date(selected_patch['fecha_referencia'])}**"
-                )
-
-
-            with detail_2:
-
-                st.caption(
-                    "Fecha objetivo pre-evento"
-                )
-
-                st.write(
-                    f"**{format_date(selected_patch['fecha_objetivo_pre_evento'])}**"
-                )
-
-                st.caption(
-                    "Imagen Sentinel-2"
-                )
-
-                st.write(
-                    f"**{format_date(selected_patch['fecha_imagen_seleccionada'])}**"
-                )
-
-
-            with detail_3:
-
-                st.caption(
-                    "Píxeles válidos"
-                )
-
-                st.write(
-                    f"**{format_percent(selected_patch['pct_pixeles_validos_patch'])}**"
-                )
-
-                st.caption(
-                    "Grupo"
-                )
-
-                st.write(
-                    f"**{selected_patch['group_id']}**"
-                )
-
-
-            group_size = int(
-                selected_patch[
-                    "n_patches_group_available"
-                ]
-            )
-
-            if group_size > 1:
-
-                st.info(
-                    f"Este grupo contiene "
-                    f"{group_size} parches disponibles."
-                )
-
-
-        # ----------------------------------------------------
-        # VISTA RGB OPCIONAL DEL PATCH
-        # ----------------------------------------------------
-
-        st.write("")
-
-        with st.expander(
-            "Ver imagen RGB del parche seleccionado"
-        ):
-
-            if spectral_patch is None:
-
-                st.error(
-                    "No fue posible cargar la imagen "
-                    "del parche seleccionado."
-                )
-
-                st.caption(
-                    str(spectral_patch_error)
-                )
-
-            else:
-
-                try:
-
-                    rgb_image = prepare_rgb(
-                        spectral_patch
-                    )
-
-                    st.image(
-                        rgb_image,
-                        caption=(
-                            "RGB natural B4/B3/B2. "
-                            "Contraste percentil 2–98 aplicado "
-                            "exclusivamente para visualización."
-                        ),
-                        width=256,
-                    )
-
-                except SpectralVisualizationError as error:
-
-                    st.error(
-                        "No fue posible construir la vista RGB."
-                    )
-
-                    st.caption(
-                        str(error)
-                    )
-
-
-        # ----------------------------------------------------
-        # INFERENCIA DEL MODELO
-        # ----------------------------------------------------
-
-        st.write("")
-
-        with st.container(
-            border=True,
-        ):
-
-            st.caption(
-                "ANÁLISIS MEDIANTE RESNET18"
-            )
-
-            st.subheader(
-                "Clasificar el patrón espectral"
-            )
-
-            st.caption(
-                "El modelo procesa los ocho canales del "
-                "GeoTIFF seleccionado con el protocolo "
-                "congelado de Fase 3."
-            )
-
-            analyze_patch = st.button(
-                "Analizar patrón espectral",
-                type="primary",
-                key="analyze_spectral_patch",
-                disabled=spectral_patch is None,
-            )
-
-            prediction_state_key = (
-                "spectral_prediction"
-            )
-
-            if analyze_patch:
-
-                st.session_state.pop(
-                    prediction_state_key,
-                    None,
-                )
-
-                try:
-
-                    with st.spinner(
-                        "Cargando y analizando el parche..."
-                    ):
-
-                        loaded_model = (
-                            load_cached_spectral_model()
-                        )
-
-                        prediction = (
-                            predict_spectral_patch(
-                                spectral_patch,
-                                loaded_model,
-                            )
-                        )
-
-                    st.session_state[
-                        prediction_state_key
-                    ] = {
-                        "patch_id": str(
-                            selected_patch[
-                                "patch_id"
-                            ]
-                        ),
-                        "prediction": prediction,
-                    }
-
-                except (
-                    FileNotFoundError,
-                    SpectralStorageError,
-                    SpectralPatchError,
-                    SpectralInferenceError,
-                ) as error:
-
-                    st.error(
-                        "No fue posible analizar el parche "
-                        "seleccionado."
-                    )
-
-                    st.caption(
-                        str(error)
-                    )
-
-            prediction_state = (
-                st.session_state.get(
-                    prediction_state_key
+            summary_column, action_column = (
+                st.columns(
+                    [4, 1.25],
+                    gap="large",
+                    vertical_alignment="center",
                 )
             )
 
-            current_patch_id = str(
-                selected_patch["patch_id"]
-            )
+            with summary_column:
 
-            if (
-                prediction_state is not None
-                and prediction_state["patch_id"]
-                == current_patch_id
-            ):
-
-                prediction = prediction_state[
-                    "prediction"
-                ]
-
-                score_0, score_1 = (
-                    prediction.probabilities
+                st.markdown(
+                    dedent(
+                        f"""
+                        <div class="active-sample">
+                            <div class="active-sample__eyebrow">LISTA PARA ANALIZAR</div>
+                            <div class="active-sample__content">
+                                <div class="active-sample__id">
+                                    {escape(str(selected_patch['patch_id']))}
+                                </div>
+                                <div class="active-sample__place">
+                                    {summary_location} · {summary_region}
+                                </div>
+                            </div>
+                        </div>
+                        """
+                    ),
+                    unsafe_allow_html=True,
                 )
 
-                score_column_0, score_column_1 = (
-                    st.columns(2)
-                )
+            with action_column:
 
-                score_column_0.metric(
-                    "Score clase 0",
-                    f"{score_0:.1%}",
-                )
-
-                score_column_1.metric(
-                    "Score clase 1",
-                    f"{score_1:.1%}",
-                )
-
-                predicted_label = (
-                    "Patrón asociado a clase 1"
-                    if prediction.predicted_class == 1
-                    else "Patrón asociado a clase 0"
-                )
-
-                st.info(
-                    f"**Clasificación del modelo:** "
-                    f"{predicted_label}."
-                )
-
-                st.caption(
-                    "Decisión obtenida con el umbral "
-                    f"congelado de validación "
-                    f"({prediction.threshold:.3f})."
-                )
-
-                st.warning(
-                    "Este resultado clasifica patrones "
-                    "espectrales pre-evento según su "
-                    "asociación con las clases del estudio. "
-                    "No predice incendios ni representa "
-                    "riesgo absoluto."
+                st.button(
+                    "Revisar y analizar →",
+                    type="primary",
+                    on_click=show_analysis_view,
+                    use_container_width=True,
                 )
