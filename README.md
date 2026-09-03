@@ -1,50 +1,256 @@
-# Producto de Tesis — Análisis Espectral Pre-Evento
+# Producto de tesis — Análisis espectral pre-evento
 
-Aplicación desarrollada como producto asociado a la tesis de Ingeniería Informática orientada al análisis espectral del terreno previo a eventos de fuego mediante imágenes Sentinel-2 y deep learning.
+Aplicación Streamlit desarrollada como producto de la tesis de Ingeniería
+Informática **“Análisis espectral del terreno previo al fuego mediante
+Sentinel-2 y deep learning”**.
 
-## Objetivo del producto
+El sistema explora parches Sentinel-2 previos a eventos registrados y clasifica
+sus patrones espectrales según su asociación con las clases definidas en el
+estudio.
 
-Integrar en una herramienta computacional reproducible los principales resultados obtenidos durante las tres fases del proyecto:
+> **Alcance:** el resultado no predice incendios ni representa riesgo absoluto.
 
-1. Construcción geoespacial de eventos y muestras a partir de datos NASA FIRMS.
-2. Obtención y validación de parches Sentinel-2 multiespectrales.
-3. Clasificación de parches pre-evento mediante un modelo de deep learning.
+## Estado del MVP
 
-El producto permitirá explorar espacialmente los eventos y muestras del estudio, visualizar la información multiespectral de los parches Sentinel-2 y consultar los resultados generados por el modelo.
+El MVP local se encuentra funcional y validado:
 
-## Estado del desarrollo
+- 1253 parches Sentinel-2 auditados físicamente.
+- 244 parches pertenecientes a la prueba final congelada.
+- 243 casos cartografiables y 244 disponibles mediante búsqueda directa.
+- Modelo ResNet18 de 8 canales integrado.
+- Reproducción de las métricas del cierre experimental.
+- 121 pruebas automatizadas aprobadas.
+- 7 `PendingDeprecationWarning` originados internamente por Rasterio 1.5.1.
 
-Proyecto en construcción.
-
-### Fases disponibles
-
-- Fase 1: dataset geoespacial y metadata.
-- Fase 2: dataset Sentinel-2 de 8 canales.
-- Fase 3: modelo ResNet18 multicanal entrenado.
-- Producto software: en desarrollo.
-
-## Canales Sentinel-2 utilizados
-
-- B2
-- B3
-- B4
-- B8
-- B11
-- B12
-- NDMI
-- NBR
-
-## Arquitectura general
+## Flujo disponible
 
 ```text
-NASA FIRMS
-    ↓
-Construcción geoespacial
-    ↓
-Metadata de parches
-    ↓
-Sentinel-2 8 canales
-    ↓
-Deep Learning
-    ↓
-Aplicación de análisis interactivo
+Configurar exploración
+        ↓
+Explorar muestras en el mapa
+        ↓
+Seleccionar una muestra
+        ↓
+Revisar sus antecedentes
+        ↓
+Ejecutar el análisis espectral
+        ↓
+Interpretar las probabilidades por clase
+```
+
+La interfaz permite filtrar el conjunto de prueba por temporada, región,
+clase, fecha y grupos multipatch. También permite buscar directamente por ID
+de parche o grupo.
+
+## Clases del estudio
+
+- **Clase 1 — Con detección posterior:** zona con detecciones posteriores de
+  fuego activo NASA FIRMS.
+- **Clase 0 — Sin detección cercana:** zona comparable sin detecciones cercanas
+  bajo los controles definidos.
+
+Las probabilidades mostradas por la aplicación corresponden a estas clases y
+no deben interpretarse como probabilidad de incendio.
+
+## Contrato de los GeoTIFF
+
+Cada parche debe cumplir:
+
+```text
+shape = (8, 64, 64)
+dtype = float32
+```
+
+Orden de canales:
+
+```text
+B2, B3, B4, B8, B11, B12, NDMI, NBR
+```
+
+El contrato se encuentra en `config/spectral_contract.json`.
+
+La carga física:
+
+- rechaza archivos que no cumplan la forma o el tipo esperado;
+- rechaza valores positivos o negativos infinitos;
+- conserva los valores `NaN` para que la inferencia aplique la política
+  documentada en su contrato.
+
+La vista RGB utiliza B4/B3/B2 y un contraste percentil 2–98 exclusivamente
+para visualización. Este ajuste no forma parte del preprocesamiento del modelo.
+
+## Requisitos
+
+- Python 3.13.15.
+- Dependencias incluidas en `requirements.txt`.
+- GeoTIFF del producto disponibles localmente.
+- Checkpoint ResNet18 disponible localmente.
+
+Versiones principales validadas:
+
+```text
+rasterio    1.5.1
+streamlit   1.62.0
+torch       2.13.0
+torchvision 0.28.0
+timm        1.0.29
+```
+
+## Instalación
+
+Desde la raíz del repositorio, activa el entorno existente. Para una instalación
+nueva y reproducible en Windows PowerShell:
+
+```powershell
+py -3.13 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+La creación de un entorno nuevo solo es necesaria al instalar el proyecto en
+otro equipo o reconstruir el entorno actual.
+
+## Datos Sentinel-2
+
+Por defecto, los GeoTIFF deben copiarse directamente en:
+
+```text
+data/patches/sentinel_8ch/
+```
+
+Los nombres registrados en `tif_filename` no deben modificarse.
+
+También puede utilizarse otra ubicación mediante la variable
+`SENTINEL_PATCH_DIR`:
+
+```powershell
+$env:SENTINEL_PATCH_DIR = "D:\datos\sentinel_8ch"
+```
+
+El catálogo operacional se encuentra en:
+
+```text
+data/metadata/product/product_catalog.csv
+```
+
+Los archivos `.tif` y `.tiff` están excluidos de Git por su tamaño.
+
+## Modelo de inferencia
+
+El checkpoint local esperado es:
+
+```text
+artifacts/models/resnet18_8ch_v2/best_resnet18_8ch_v2.pt
+```
+
+Su contrato operacional se encuentra en:
+
+```text
+artifacts/models/resnet18_8ch_v2/runtime/inference_contract.json
+```
+
+El contrato fija y valida:
+
+- arquitectura ResNet18;
+- 8 canales de entrada y 2 clases;
+- orden de los canales;
+- clipping por canal;
+- imputación de `NaN` mediante la media de entrenamiento;
+- normalización Z-score calculada únicamente con entrenamiento;
+- dropout;
+- umbral de decisión seleccionado en validación;
+- hash SHA-256 del checkpoint.
+
+Los archivos `.pt`, `.pth` y `.ckpt` están excluidos de Git. El checkpoint
+debe proporcionarse por un medio externo y conservar exactamente su nombre y
+contenido. Reemplazar solamente el `.pt` por otros pesos hará fallar la
+verificación del contrato.
+
+## Auditoría del almacenamiento
+
+Para comparar el catálogo contra los TIFF disponibles y validar físicamente
+cada archivo:
+
+```powershell
+python -m src.spectral.storage_audit
+```
+
+Para regenerar el manifest después de una auditoría completamente válida:
+
+```powershell
+python -m src.spectral.storage_audit --write-manifest
+```
+
+El manifest se guarda en:
+
+```text
+data/metadata/product/spectral_storage_manifest.json
+```
+
+## Ejecutar las pruebas
+
+```powershell
+python -m pytest -q
+```
+
+Resultado de referencia actual:
+
+```text
+121 passed, 7 warnings
+```
+
+## Reproducir la evaluación cerrada
+
+Con los 1253 TIFF y el checkpoint disponibles:
+
+```powershell
+python -m src.spectral.evaluation
+```
+
+El comando evalúa los 244 casos de la prueba final congelada y compara las
+métricas obtenidas con los artefactos de cierre. El resultado esperado es:
+
+```text
+Resultado: COINCIDE
+```
+
+## Ejecutar la aplicación
+
+```powershell
+python -m streamlit run app/app.py
+```
+
+La inferencia se ejecuta localmente en el proceso Python de Streamlit. El modelo
+se mantiene en caché durante la sesión para evitar cargarlo nuevamente en cada
+interacción.
+
+## Estructura principal
+
+```text
+app/                         aplicación Streamlit
+artifacts/models/            contrato, procedencia y checkpoint local
+config/                      contratos y configuración del proyecto
+data/metadata/               catálogos y manifests reproducibles
+data/patches/sentinel_8ch/   GeoTIFF locales excluidos de Git
+src/data/                    carga, filtros y validación de metadata
+src/geo/                     preparación y visualización cartográfica
+src/spectral/                almacenamiento, auditoría e inferencia
+src/ui/                      identidad visual de la aplicación
+tests/                       pruebas automatizadas
+```
+
+## Limitaciones actuales
+
+- El MVP analiza parches previamente construidos; todavía no descarga nuevas
+  imágenes Sentinel-2 desde la interfaz.
+- No permite definir un área arbitraria ni ejecutar automáticamente toda la
+  cadena de adquisición y preprocesamiento.
+- La vista RGB es complementaria y no representa los ocho canales procesados
+  por el modelo.
+- El despliegue público requiere definir almacenamiento externo o una selección
+  controlada de GeoTIFF, ya que los datos y el checkpoint no se versionan en Git.
+
+Una evolución posterior podrá incorporar el flujo completo de definición de
+área, selección y descarga de imágenes, preprocesamiento, cálculo de índices,
+análisis, generación de mapas y validación.
