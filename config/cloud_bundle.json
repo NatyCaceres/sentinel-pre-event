@@ -1,0 +1,1259 @@
+{
+  "schema_version": 1,
+  "dataset_split": "test",
+  "patch_count": 244,
+  "bundle": {
+    "path": "sentinel-test-resnet18-v1.zip",
+    "size_bytes": 77461339,
+    "sha256": "e0b0c3f7e1f3dfd120aff7dd80a5b02fd3d33f2c27198f51cd70787519e03ed7"
+  },
+  "sources": [
+    {
+      "path": "data/metadata/product/product_catalog.csv",
+      "size_bytes": 629131,
+      "sha256": "307703a743a3021055a8b76bd2b1ed2d579988921927366abfc0887ddd97e16b"
+    },
+    {
+      "path": "data/metadata/product/product_catalog_manifest.json",
+      "size_bytes": 996,
+      "sha256": "412f5e4cabdf76ad69d4f25fe4ba38095ac431544de97b014bf06b9a3c97d67e"
+    },
+    {
+      "path": "config/spectral_contract.json",
+      "size_bytes": 588,
+      "sha256": "89f9a0f68887dd51301368493857eff78771ae30c042e3e4fdbc112ba36d476e"
+    },
+    {
+      "path": "artifacts/models/resnet18_8ch_v2/runtime/inference_contract.json",
+      "size_bytes": 3045,
+      "sha256": "38d31cfbe366f5f53e55284c5b3e714ca4bdbab619241c347d2e249dc9f65512"
+    }
+  ],
+  "files": [
+    {
+      "path": "artifacts/models/resnet18_8ch_v2/best_resnet18_8ch_v2.pt",
+      "size_bytes": 44855435,
+      "sha256": "f044556b9865e88af594f14a8dd1cef4feea8fc203d90f8318c1827ddad5c155"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2018_NEG_00014.tif",
+      "size_bytes": 133222,
+      "sha256": "308a76e398fac8cfce0aec57808fd7ec8ccd6f62ac69cc367808d7f23b956253"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2018_NEG_00015.tif",
+      "size_bytes": 138409,
+      "sha256": "f30290892a2b48106dbe51cf933c108c6c67cc30fbaa1e4c7cf105211da606bb"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2018_NEG_00019.tif",
+      "size_bytes": 135191,
+      "sha256": "97f86bc21d2e71d54df01719f25122097becf3f5463647b77db6169f7e15e26e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2018_NEG_00020.tif",
+      "size_bytes": 133931,
+      "sha256": "d4fee636936a2ff829357a1f1f1cddc091b6ae29fa7c1477e6f8126ffe06079e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2018_NEG_00027.tif",
+      "size_bytes": 138284,
+      "sha256": "99bf09dbf854ab405a579b8a01fde6032c54b99d1a686c14bb440ff7ab9a132c"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2018_NEG_00037.tif",
+      "size_bytes": 135460,
+      "sha256": "f08b513290c84e4e4bf5e369adfae39c7370b1a832aa8ef5336a58461ddc90fd"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2018_NEG_00038.tif",
+      "size_bytes": 132145,
+      "sha256": "023b531152a54ba2836aae8da93340745c0da932c20f9bf0ae84f78b5e2571a8"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2018_NEG_00043.tif",
+      "size_bytes": 135440,
+      "sha256": "fe814fa847325d9723213294a05fc00f42df21afb048abb05ba5584bfb6e02bc"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2018_NEG_00044.tif",
+      "size_bytes": 138571,
+      "sha256": "5ae9b0e0363ce3bbe288957a8db8811b385cbe2c179f6a4938be527441337823"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2018_NEG_00045.tif",
+      "size_bytes": 122637,
+      "sha256": "728f5fca1cc517d20e493e5bb114848a3e17ae97b867a5bd9a36390872ed83a3"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2018_NEG_00047.tif",
+      "size_bytes": 134363,
+      "sha256": "f11b85f22c7f644dd41af5bf98b4d00743f4da780a838afea650e37e4117be88"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2019_NEG_00071.tif",
+      "size_bytes": 127796,
+      "sha256": "401a52b0c3f44777f702aa4c2b709e246c1611aaf49bc7f4f349838af4c961e3"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2019_NEG_00082.tif",
+      "size_bytes": 133184,
+      "sha256": "73cc0071dd3689de576740ae9eae4ffb43cefbf75b749f9df6dd52e7145a0be7"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2019_NEG_00094.tif",
+      "size_bytes": 135562,
+      "sha256": "b66f92e6a15eecdc7bfd6d9690e5df7fbff1926d01db993ff6d8603a4b130da4"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2019_NEG_00097.tif",
+      "size_bytes": 132887,
+      "sha256": "e9bf5d3c3cbd137c4bb513515f52652e2b971596f0d05fe9df9a4471236ec79d"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2019_NEG_00099.tif",
+      "size_bytes": 132808,
+      "sha256": "e270a002524e23a19e767451ed7a9af16d3ac4becf49d22033af840b45dbd9fc"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2019_NEG_00100.tif",
+      "size_bytes": 132441,
+      "sha256": "48516568cc37e8db5032031466d91433dd684a579ecfd815a227661e6692ca8d"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2019_NEG_00102.tif",
+      "size_bytes": 138324,
+      "sha256": "ae15e51449cf1354b87c611801abe6f3863a9741883e5717b6fb53d7592a408d"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2019_NEG_00110.tif",
+      "size_bytes": 138463,
+      "sha256": "3bae1d9e65a04b7434a971ae0a8436a3ec69a28c753d1973df418a7c8c4e841b"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2019_NEG_00116.tif",
+      "size_bytes": 137499,
+      "sha256": "32910a81a6b800aa3de743274a28b1e478ffc3bf0ff53f4a8604b7599298241e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2020_NEG_00134.tif",
+      "size_bytes": 138482,
+      "sha256": "0562690870e96d079408f2f4732658c1f3134dd342a6e4918d168ce0d068d192"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2020_NEG_00145.tif",
+      "size_bytes": 137088,
+      "sha256": "8442f60508dcd1dfe72a64213aaa819a3ab05ea204a09a6f20e9867770ff8a58"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2020_NEG_00151.tif",
+      "size_bytes": 129489,
+      "sha256": "cf47862606fa6ae76766f06bca57b1ffff44c376144ed32c3e302bcf9a5d86bc"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2020_NEG_00159.tif",
+      "size_bytes": 134018,
+      "sha256": "847f3a2d620ab85bb347e8093197e891ea9b4c5764b960ae55905e402028df75"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2020_NEG_00161.tif",
+      "size_bytes": 138041,
+      "sha256": "6dab2d7e7e0577defb8396eae38efea296f28cf160e024dc6edf08b24bdb3fa7"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2020_NEG_00163.tif",
+      "size_bytes": 136526,
+      "sha256": "8a0bdee71d69b4d1a65b462ff477198c537e50cfe11c4d005e93a094dccc814a"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2020_NEG_00168.tif",
+      "size_bytes": 133032,
+      "sha256": "54bbf7d2940139c5e7274ee89f02fb3ed447ce51123e1265e913c26bef3ad73e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2020_NEG_00173.tif",
+      "size_bytes": 138228,
+      "sha256": "3dbac72391208a870b758c24199946ef6093fcc2771b80fbd6d1c25275614451"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2020_NEG_00174.tif",
+      "size_bytes": 128238,
+      "sha256": "2ccc853579621ef2dd8120c0c8aa74ad605ceee5c2f577940d00cb7282faf0b4"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2020_NEG_00176.tif",
+      "size_bytes": 136222,
+      "sha256": "ebcc1b35932e824d151a25cdcce2d001f5b346607bef4fc5e7ff84ab0cf8feb0"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00182.tif",
+      "size_bytes": 131608,
+      "sha256": "a359eb291279f45d7b5b446bfe79b18bd84b01612eef7511d52a2633b12e8764"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00183.tif",
+      "size_bytes": 130120,
+      "sha256": "36288dcd139194bd298457f7753cc91ec10aca702f0cad91e2d8d343f83d9526"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00189.tif",
+      "size_bytes": 127372,
+      "sha256": "3a941341b55a35cb965ba58edd9d5fae021d3a09cf3dc8726b28a94c4a346b80"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00197.tif",
+      "size_bytes": 132811,
+      "sha256": "135888af1aa8daf1b71a5b3e01ad2716e323f2166501cad29e9762ea1e4cfc4e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00207.tif",
+      "size_bytes": 129685,
+      "sha256": "06c3f07e8797564e3a1f725c9bbf3bcb37b78d5d4006131f3cb5956c0b27fd2e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00211.tif",
+      "size_bytes": 123705,
+      "sha256": "a58950083f7d62e0682eab7c24239169be1ce5f1d10cec0318bd73d44a3e456c"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00214.tif",
+      "size_bytes": 133098,
+      "sha256": "20c1252c891760451f8702cc8c8a05a299626cd89b1df785fc96574919ce50f8"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00222.tif",
+      "size_bytes": 130788,
+      "sha256": "e579813c1a7c6da198b95ae228fcd1a66dd212644429c1692c9de92ae6181563"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00223.tif",
+      "size_bytes": 138413,
+      "sha256": "d7fe7211eb40a5513154323ed24c1e5ed4fb9943a47e85a899528338244b1898"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00226.tif",
+      "size_bytes": 130896,
+      "sha256": "1021e050102914830a913b99cabebb8b8fa6028dc16db0fd03d5891181b2f883"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00229.tif",
+      "size_bytes": 135370,
+      "sha256": "05b338abd5c5a873df8d03752346d1a57ab564461fb1b8de5633d5f327067de1"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00236.tif",
+      "size_bytes": 135197,
+      "sha256": "41bb3a040249bf970aeba57fe4a216fee6107a06a602d756318f5595fae099a8"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00239.tif",
+      "size_bytes": 130497,
+      "sha256": "e3f2e8abea924bde2bbf0d6530a7413a14762d59d12cf1f21f7c87c62507e8d8"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00247.tif",
+      "size_bytes": 135773,
+      "sha256": "aea3135ab7229bd31acf78648f1cc46095144f08b48c5e96a2a4ea3533a0b964"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00255.tif",
+      "size_bytes": 133931,
+      "sha256": "dbe2bea74741766929c75b778fa22adffd2186092cb695d4a66e167c8bb2fb66"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2021_NEG_00256.tif",
+      "size_bytes": 135409,
+      "sha256": "2dab04e933360131bee8d7ee55f9402bc102e812c9f1125650de82606ccf6593"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00260.tif",
+      "size_bytes": 129505,
+      "sha256": "a49c9e13569663ac912bb2ff6bed2c13a8a46966fad236bed78352f075ddb0bf"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00266.tif",
+      "size_bytes": 133366,
+      "sha256": "71ad7e0e58573b06654e4799ed4a2372bccfb5568f4648056daf92dc79b99f75"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00284.tif",
+      "size_bytes": 135643,
+      "sha256": "012273871c39525798cc66f5164f2f5a619ca168eeaacf8785ca4e4b5206276f"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00291.tif",
+      "size_bytes": 125356,
+      "sha256": "2c8285de62d8217c64a1fc20a4d4b173893b776cde0fc99fc56e2a9e4f9a1939"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00298.tif",
+      "size_bytes": 106838,
+      "sha256": "5b414ff93888a2d102d59ea984081080936e352b39afb87d07d5a21265125f2b"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00299.tif",
+      "size_bytes": 127470,
+      "sha256": "1b9ad6646cf663140b2e8f2c71044c9365f7cfc931ce44f0371d6c32d71c35a4"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00308.tif",
+      "size_bytes": 137491,
+      "sha256": "cea0f61a21f83f17dcc1589bc093b70e674755bdf8c386c74f425d2bd9b5d5e4"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00316.tif",
+      "size_bytes": 134263,
+      "sha256": "d005076ca4d008f1a8980188a487fa72afb4830f034654dec0e3023a947af705"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00323.tif",
+      "size_bytes": 138189,
+      "sha256": "a51610fd3ff3ca1da95eb23822cfae2e2625156f4a454232b412e34fc4dd329e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00328.tif",
+      "size_bytes": 134603,
+      "sha256": "5b280b1023562b982fdd321b7327b82d8d66b24206cd2997a46183d2593b642b"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00332.tif",
+      "size_bytes": 123996,
+      "sha256": "769ddc9cc2c0b41f8ece3bcc74dc25314f1c2532dd86b47597b27be52dd382dc"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00336.tif",
+      "size_bytes": 133167,
+      "sha256": "95c84d7963d26aa6e46bd567d99ebb8f354540cf22496843e21808c47b7edf99"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00341.tif",
+      "size_bytes": 134770,
+      "sha256": "cebee84bb4977ada0b43f1294be129f588b6fc3ca410f7e6808695823bf04a73"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00342.tif",
+      "size_bytes": 137466,
+      "sha256": "ad3df7b0e1a4ec6b3c4f341b08d42a568ede434a867352b1d85612ef757a898f"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00343.tif",
+      "size_bytes": 130552,
+      "sha256": "195b2d994bf046126bdd4f174eed5ea21833fec419f07e21f9cac1cc0a276bd2"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00344.tif",
+      "size_bytes": 138453,
+      "sha256": "572a26410dc7ec6a7ae98bb75d93b5035cc509296d401c9ca2260bee9600dcba"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00348.tif",
+      "size_bytes": 137625,
+      "sha256": "0d5698c3bd35978ce18377f4af41286d0980d18d9857e178f0c5bdbc5f48ce34"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00358.tif",
+      "size_bytes": 135610,
+      "sha256": "1c5798fac75e83c892c9d3c18a232dc567920ef47642acfe0d623d4dfbf2eb34"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00361.tif",
+      "size_bytes": 132364,
+      "sha256": "0e383055a9ba8388432841a4b94df5910a84b23ebcde17694ca53262a02f124f"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00367.tif",
+      "size_bytes": 135707,
+      "sha256": "d1043c9c368fb75889729af72da5e13bad87a5c1824851fc3cf2cd48712fad52"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00375.tif",
+      "size_bytes": 135233,
+      "sha256": "a8c1a1365f46bec771b695c70d7e23f2ec4fbad82a0548c00ea2fd3e1d0d6e5b"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00376.tif",
+      "size_bytes": 136250,
+      "sha256": "9f82815dcfc2f2ed2bc4b07e02bf77e4e89eb2a29fdbb673ddd777070bd07c32"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00394.tif",
+      "size_bytes": 127478,
+      "sha256": "d99a12e492aa99f348e73ccfa4bf61332b2e04a13d81c8563490e5f52badc8b3"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00398.tif",
+      "size_bytes": 135064,
+      "sha256": "6459dff7ec7c52bf909eaf2f28abd9542b4e7aee9d7592a25451bec795547156"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00401.tif",
+      "size_bytes": 136175,
+      "sha256": "dc2993da2d79cedc7cc6cfb9914ec258e1b13476a16e95d648ed6dd39e254e44"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00403.tif",
+      "size_bytes": 134315,
+      "sha256": "90f2c2eb28717e32b8dcb4813b14450ef05064a418a533a6ae74b025d047d5a6"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00407.tif",
+      "size_bytes": 136099,
+      "sha256": "6ccc607c4fc2bc149ac8d6d9c920cad6d54ca0dfa175f773102934a2ff2d35f8"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00413.tif",
+      "size_bytes": 133204,
+      "sha256": "597bbf8c8089f2e941bf86f493fa861ad198cc577a980a0f37a9698592876c52"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00417.tif",
+      "size_bytes": 132163,
+      "sha256": "99e2279dbd692c8b8ce11d5b360bd56800b7ad5f8a212ffe53dd0401dc5d2f2f"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00421.tif",
+      "size_bytes": 134194,
+      "sha256": "c941528422444f418179a21ec111a3681a09ae9aea399ab787ce50f37f78b47c"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00425.tif",
+      "size_bytes": 138520,
+      "sha256": "a36268830c683b669aaac5fe85e5627dd3cf2fe69bb4104f3322def20590f1ad"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00435.tif",
+      "size_bytes": 134078,
+      "sha256": "e46d8851d998dcc79262317710a9fc842cf582ee86546b9982e6469c5b6c45fb"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00440.tif",
+      "size_bytes": 136555,
+      "sha256": "44b47a0448a95f9353f5f298a2a9d770abb5b831186af34e1694d87692f0c29e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00448.tif",
+      "size_bytes": 134209,
+      "sha256": "d491adaa7f46fab18a1a75fc679857521725a356b20d2a2c1af109e3d956362f"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00455.tif",
+      "size_bytes": 133789,
+      "sha256": "c2cf1edc310b3c47c96a69c24b69fca17566961866e2be3c9f4f18a5265cbeac"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00469.tif",
+      "size_bytes": 134894,
+      "sha256": "0339c1504537965448b63b00eb929beabcd95361e9ef52cf5d15c57b148e2875"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00471.tif",
+      "size_bytes": 132046,
+      "sha256": "554c52e9d499eb32d6a591e73555a469e9f1ca46694e7367e16a757ec2252918"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2022_NEG_00473.tif",
+      "size_bytes": 132825,
+      "sha256": "c7d26e4f0a572b0959f2df6b72b2fcb813fe40a24dd49814b6bc2280db1f4894"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2023_NEG_00481.tif",
+      "size_bytes": 135227,
+      "sha256": "68481807ab1d45c6279b13677e91431926a6f7ca44dbe7f2cbec73556b7633e3"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2023_NEG_00487.tif",
+      "size_bytes": 130444,
+      "sha256": "47b48a4c770896131c3a7ad63aaba3aee12fb1366f661901d62541cdf727f2d8"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2023_NEG_00491.tif",
+      "size_bytes": 135602,
+      "sha256": "7b8d5dde021590c4ac1dcbf0fe927f07ad1656ed02539300f8c6a7f152542e29"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2023_NEG_00493.tif",
+      "size_bytes": 136013,
+      "sha256": "e6132d0fd1693888fc044b1719998bc5e6de2ac4111a244381266fc980a03381"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2023_NEG_00494.tif",
+      "size_bytes": 133664,
+      "sha256": "4c7aeb19bcbe1ff4d12b0a998e65851085aa971880caeb04d9516cb5c2da2167"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2023_NEG_00495.tif",
+      "size_bytes": 130059,
+      "sha256": "fef18315152acef6381ea58eef56967f56a7349ce5dc233440861a17b8abb2a4"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2023_NEG_00510.tif",
+      "size_bytes": 137777,
+      "sha256": "63752a3fbe9436c97ad6bec25553dddada4e2176682dee740c65e5d6961f1158"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2023_NEG_00511.tif",
+      "size_bytes": 133445,
+      "sha256": "e0ddb5f4214b1ecbe421b635b1654923371fe2677c7c9beab7f49ae12fab0d52"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2023_NEG_00513.tif",
+      "size_bytes": 134110,
+      "sha256": "1fae394aa3da1fd0ada482a716ecb0e38e123b6973b600ca2789f1d69edc82af"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2023_NEG_00517.tif",
+      "size_bytes": 132574,
+      "sha256": "ff6ef5a680833261b768f64889480ace66ae49f219c74acc7c08754750079b5e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2023_NEG_00520.tif",
+      "size_bytes": 133685,
+      "sha256": "22385a487855e3fe7e284f67c6b861a0017f1769c2ca54a20a5e372a83e79690"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2023_NEG_00523.tif",
+      "size_bytes": 134495,
+      "sha256": "c515fb61db61d8ec477fcbc82a5af770932f37cecc4ffa1ceab2942d290fdc17"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2024_NEG_00549.tif",
+      "size_bytes": 133799,
+      "sha256": "446ffda4f9cca2365e66b03c0b7e38529edeba1246404f1bab43121ab2e2bba9"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2024_NEG_00555.tif",
+      "size_bytes": 137129,
+      "sha256": "2dc0e70ebfcf22f494f36944bffc405608cfbf9ce8147292db006c8761e8f85b"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2024_NEG_00558.tif",
+      "size_bytes": 137411,
+      "sha256": "e84ffa83875e6587eadbb0b01715843bb65d7e43597b4b89803af089dbc2e86f"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2024_NEG_00561.tif",
+      "size_bytes": 130216,
+      "sha256": "824a822532596e8f2ac50b22325c57bbcaacd665b2909a0368fd23a9d77df22e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2024_NEG_00563.tif",
+      "size_bytes": 134243,
+      "sha256": "920f23ebfd58e681b1f58f6a99fd855027703ec7e8b705f9eaad602bcc8f9e46"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2024_NEG_00584.tif",
+      "size_bytes": 135769,
+      "sha256": "73880ca3a319901532facfd2b9406eda47310e4e61e9026376f03ef733ebfad8"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00596.tif",
+      "size_bytes": 131837,
+      "sha256": "cdb531aed6788e86d72df16849e71715ff71396cccc131e1e33ad035d8eed2c8"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00599.tif",
+      "size_bytes": 133211,
+      "sha256": "2a1ac1fdd5e676d7ddc5a4774a03591f318cd0f4317c8f85e037daddb13706a1"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00601.tif",
+      "size_bytes": 133124,
+      "sha256": "2226112aaeac07ba508d2b7415a04122eb2289475137783a1ec6f1a188152d3f"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00603.tif",
+      "size_bytes": 129201,
+      "sha256": "c0b8811699e7889910f47da2b4d6905981f870203c02b31990f8b01f45c05e06"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00606.tif",
+      "size_bytes": 135074,
+      "sha256": "98961245e965fe964098360a5dbf8cde45eaca4ea705359f65799dc3614df1f2"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00607.tif",
+      "size_bytes": 130741,
+      "sha256": "ec1bcacd47c09256fe2fbc98989bd49fd18e3bba5bbfa172adaeb3e302b1efcf"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00610.tif",
+      "size_bytes": 133738,
+      "sha256": "9c76660880f07e31e48e1194d8e7fcfd471ef301c94564d227817850e2db446c"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00627.tif",
+      "size_bytes": 133330,
+      "sha256": "7020f7579f7ebe0806103b616218a62b2a97d6ee945cf3f5eca5959ec5014139"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00629.tif",
+      "size_bytes": 130491,
+      "sha256": "c703773e30505afb6e7a8c87fed683d597326aa56a97e8dbcbe7228d2c1c61fd"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00634.tif",
+      "size_bytes": 137866,
+      "sha256": "911a4e86682b5f41731854df4fbfe6c71c10e6bb6c3dcee41c2730a1ae1c9fba"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00644.tif",
+      "size_bytes": 127756,
+      "sha256": "a48b8c325147f467f673f4bfa307f47fc4909b7b187a374de74f236389f0a112"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00646.tif",
+      "size_bytes": 134362,
+      "sha256": "64ec2800ad4cc012ac2fa6fb17c559b4789ee86184fa400fa11ca16b8319f8aa"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00651.tif",
+      "size_bytes": 127805,
+      "sha256": "24b72c2c28eeceeca70488c25abeab183bd1b5c350413589e38543acfad91ac6"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00655.tif",
+      "size_bytes": 137041,
+      "sha256": "ebbd184b35c536346d3e952025ba15a9e0327dc608a854454604250248a148f0"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00661.tif",
+      "size_bytes": 133080,
+      "sha256": "ebc09e87eda075d517941d81b820d4c0edde32fb569388ea0c1bf90f2eba6faf"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__neg__P_2025_NEG_00664.tif",
+      "size_bytes": 133181,
+      "sha256": "9ef7231296ac3582de70291968462564e0dc25d7b59fb83626ae90f3bdf494b7"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2018_POS_C0000_01.tif",
+      "size_bytes": 135574,
+      "sha256": "6034e1febd8ba62482ad136d52148e88b86d49080194a7c438beeb1314d895cf"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2018_POS_C0007_01.tif",
+      "size_bytes": 138520,
+      "sha256": "c258f6e13bc2df29bd1b3eb864379a997a42589cb57007944e59c21cc5c12728"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2018_POS_C0013_01.tif",
+      "size_bytes": 126850,
+      "sha256": "c1b76269859db415e9ca12e3504be4882e550294331dfd5c114adb041b41751e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2018_POS_C0014_01.tif",
+      "size_bytes": 134222,
+      "sha256": "fdc9d16cb6c2c5eb64c452ad6e0309e63bb8b1894a0ac69f7c983c6068b94154"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2018_POS_C0021_01.tif",
+      "size_bytes": 133960,
+      "sha256": "56ef5acf71278e28de1dec7fae6ece7f808b577cf00003d4160379189b0ba16d"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2018_POS_C0033_01.tif",
+      "size_bytes": 134947,
+      "sha256": "41499b459d6fd9394a9675c61703207a6a500bbe337e5b707b49133202bdf900"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2018_POS_C0036_01.tif",
+      "size_bytes": 137777,
+      "sha256": "c81d0f58ea274435cc8091fb1f64f7317631cb50e1f4712148504993b8f25ff7"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2018_POS_C0050_01.tif",
+      "size_bytes": 130714,
+      "sha256": "5fe1983fdaf8d0c01de0369b5bc8b175951df60249ba91375ced748fd1115d69"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2018_POS_C0056_01.tif",
+      "size_bytes": 134443,
+      "sha256": "7d8d646883ae7461c9ad418292f15905b8b8efe8f616762b688a520cbe173daf"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0070_01.tif",
+      "size_bytes": 133094,
+      "sha256": "0b73bd89df51337aabaad8f3b76290dd7c52df50c9cd8b80103c91acf63b074b"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0072_01.tif",
+      "size_bytes": 133197,
+      "sha256": "c15ec7e7648ca0f5bc7ab05d556c02d1d88def5eae00c3e178d67fbc1d60be0b"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0074_01.tif",
+      "size_bytes": 130648,
+      "sha256": "02d035465430d1585f90b736c8239d4227ea4a82845014b8e036aba04f1a10da"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0079_01.tif",
+      "size_bytes": 135284,
+      "sha256": "468d80ab83a39431e63bf08fc73bf497833e9f0bc83dbdc554a60bd9e3eaba1d"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0082_01.tif",
+      "size_bytes": 134660,
+      "sha256": "3d4a9e29f323fe545db24142dbd3fbdd1361b4e9019567f5f4db9d45b0815416"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0086_01.tif",
+      "size_bytes": 135670,
+      "sha256": "8e6c717b1fd564aae6f051f052a69be8ff72fbb2f1dbb6a32bd3a98d164ffdd1"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0088_01.tif",
+      "size_bytes": 137078,
+      "sha256": "9ef14ff1b6bd9718a09b7c3849a95025359c03ec071b3cb632c80d42774b7f30"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0092_01.tif",
+      "size_bytes": 138347,
+      "sha256": "eacd41131fdeb4929faf7d70a442175a089aa98482ef94547bff739217994de2"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0097_01.tif",
+      "size_bytes": 133685,
+      "sha256": "132aa436101f7adde68e6d1b3252898fc05784179f120e89f26809a19f3bdedb"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0102_01.tif",
+      "size_bytes": 130884,
+      "sha256": "ecfb9df780db28c87eb489bcbfbe797765e652b1c6fd25b8d856dafc99890ee7"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0105_01.tif",
+      "size_bytes": 133969,
+      "sha256": "f5c6c127a9069a05484645baa14a370bc64d77c8fa04a7c6280a93c08d81db02"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0107_01.tif",
+      "size_bytes": 132148,
+      "sha256": "4d2159da6f358ade32a2c8caefddb3450adb77b7ca5b9e7ad01923e6e3e8ab98"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0111_01.tif",
+      "size_bytes": 132959,
+      "sha256": "d835141af17aaa7926b4656178fbee495a1b071679ed7c5234740c2cb86313e3"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2019_POS_C0122_01.tif",
+      "size_bytes": 134417,
+      "sha256": "75df9a41dbab6fe7279d61ec503743bd98ba85f570123a291f9108774fbbd46e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2020_POS_C0136_01.tif",
+      "size_bytes": 134588,
+      "sha256": "239a7f6f889155c40e89e6c15255b8e5a9ef47dadd522ebe4057d2105d6a6a95"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2020_POS_C0138_01.tif",
+      "size_bytes": 135836,
+      "sha256": "208c4955bdc05fd3cf9fba723005d7e036c1a64c52aba977bb1c515fe2069467"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2020_POS_C0140_01.tif",
+      "size_bytes": 135562,
+      "sha256": "12178dbf30a4d558bdc438673a60d010333c6dafcefceb9ebc14ea09671cee40"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2020_POS_C0141_01.tif",
+      "size_bytes": 137972,
+      "sha256": "a95ccaab32cbb10909e5e6a885575e07d020f08405933c52c5b2214b6e830d7d"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2020_POS_C0143_01.tif",
+      "size_bytes": 132007,
+      "sha256": "6c520269f9b0677760a3409ba453e5f2d85c865a79708211b25d55de2880baa6"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2020_POS_C0148_01.tif",
+      "size_bytes": 136217,
+      "sha256": "a55d5d240eb95883780c94bab684bfad1226d5a5555c2321b70a2fc6ed04c394"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2020_POS_C0160_01.tif",
+      "size_bytes": 135829,
+      "sha256": "d9ce63d66773e770eb835f3045eaa263caa2799a4093179b8966b7c8110c5439"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2020_POS_C0171_01.tif",
+      "size_bytes": 133218,
+      "sha256": "24240c055fec2fcc9cb2a0be2901f4ac4454f26379a55ddf18bd96bb8dd24e11"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2020_POS_C0173_01.tif",
+      "size_bytes": 127294,
+      "sha256": "3c833b7ad9f843a332e401eafdd44253973d254a733f772a40cdb1f0b454f067"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2020_POS_C0175_01.tif",
+      "size_bytes": 133204,
+      "sha256": "542c7414e1241e82494e9ea36f6984d279bb1bc2077efd771908e5f4a90c014e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2020_POS_C0176_01.tif",
+      "size_bytes": 137010,
+      "sha256": "b8828639c4ebf551f40b45ecf43622fd11cb03ca7b66f5f4bbe2649f41665c14"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0188_01.tif",
+      "size_bytes": 132572,
+      "sha256": "d823b42dc9888e4d64324f1ea20996abad67d43902dc23409575b85e37dfb73e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0192_01.tif",
+      "size_bytes": 134108,
+      "sha256": "57a7d036dd369728bc1a8ab22f688f26c07a7ba06ad290eaf27b7ac5cc72dbb4"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0196_01.tif",
+      "size_bytes": 133186,
+      "sha256": "2ba5ff666e399ba1ddf47854416b97bc9380aa8d768f30b2d304509069f28683"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0205_01.tif",
+      "size_bytes": 136112,
+      "sha256": "2324bcb97e22358d6e697b412530588c27309b644cf87e4fa4c00210d45a93be"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0212_01.tif",
+      "size_bytes": 132678,
+      "sha256": "61bdb9245e2aa5cc3806a91ec427f86e62cda7ad5c9809eaabe5bfb787a7c0e3"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0213_01.tif",
+      "size_bytes": 133126,
+      "sha256": "bef2cb21738fd64562f04068143bc022f65b28a629ee03a73daa7d49b4e7600f"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0217_01.tif",
+      "size_bytes": 137687,
+      "sha256": "199c92a5a09dbd91f9393836f3aa44609dbb3186a87306805fa58b8371734ddb"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0220_01.tif",
+      "size_bytes": 135118,
+      "sha256": "36be2fc07a9608047cd930f21040988bd60c0a09e02b40d2aea1c7230d90c2d1"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0228_01.tif",
+      "size_bytes": 127735,
+      "sha256": "dee424433d634788e17cdf9ae35f53f3f3622d37b87a19dc3776ec2eb405d01c"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0231_01.tif",
+      "size_bytes": 133634,
+      "sha256": "a01868960f28050243d044fd15483151cd142aaf294c47ad6ba83a03fff705e5"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0235_01.tif",
+      "size_bytes": 127191,
+      "sha256": "e0d2883cffc4162557804f463cc54732f937fe5bf025d1c3f1a33db06ec7a5da"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0237_01.tif",
+      "size_bytes": 126378,
+      "sha256": "175aaf831926e7088e52184908c57619658dee2ff1176286675c262852262c32"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0242_01.tif",
+      "size_bytes": 137603,
+      "sha256": "1fe530aa629a02bba692b8dc8d136143032ee8f2d77caa565a899d6e5bb704af"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0247_01.tif",
+      "size_bytes": 128734,
+      "sha256": "6a8c1a4d793f24da964d1359870a2bbbefa9cf1201d0d05668026be6361fe285"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2021_POS_C0257_01.tif",
+      "size_bytes": 127816,
+      "sha256": "b5167b3dd5761b730725187184f043e6e27516b58bc08c21e44b4d088f6fd1a2"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0260_01.tif",
+      "size_bytes": 133795,
+      "sha256": "9f5e500479fb2dfbe3d488f5bb884801a864c5481cfe34025a715739cb4146ff"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0278_01.tif",
+      "size_bytes": 133211,
+      "sha256": "4fca467835f062fa5e9944f9cdeb423757b3e99ce4f4de083405c61802d63cad"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0283_01.tif",
+      "size_bytes": 133042,
+      "sha256": "c612eaba308d6ce399639f3b72c8fef8a7e2bcf46a2adb23e007397edacc20ff"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0289_01.tif",
+      "size_bytes": 130419,
+      "sha256": "2e896794c92085fe7bc8248db12cb3386809ce7f525283f835085f0669708d3a"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0293_01.tif",
+      "size_bytes": 134648,
+      "sha256": "519efb42255410dd4d08261d5ccbbe396ec1193d8390549253e8be0b3e769026"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0303_01.tif",
+      "size_bytes": 136995,
+      "sha256": "1ca6f09dfc6e1b0b2ca20d5562d76f7d471f1afcda8f39d6ae727b36f8e58408"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0311_02.tif",
+      "size_bytes": 135599,
+      "sha256": "358a74114164084e8d3fe6eae05a12ab03b61deae719edcd855cffef59ec8684"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0311_03.tif",
+      "size_bytes": 133717,
+      "sha256": "79522af1aba8e66279250417836001334aa1b0ce2b89e78afafd449c3203be71"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0311_06.tif",
+      "size_bytes": 130641,
+      "sha256": "4a720a0a63203531c630da9e89d3d16d3eef03fb56178a075f2c98b43582a787"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0319_01.tif",
+      "size_bytes": 138949,
+      "sha256": "2a4fc93d48379bc63a565c2839835982a374a93dba798a895e455512eddb6b23"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0322_01.tif",
+      "size_bytes": 129063,
+      "sha256": "100fff47c9ee29193412a21c95180541c5e07dc1afb46233ec399df4fdd99b21"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0322_02.tif",
+      "size_bytes": 131541,
+      "sha256": "29c07d4f8f7472afa274f123a2478d57c271d5818092233ae03885c1028e1478"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0322_03.tif",
+      "size_bytes": 136000,
+      "sha256": "9b5e47f90175b6bd4292ea6851c9d303730eeb862a2a9f3af6b823f6ea467284"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0323_01.tif",
+      "size_bytes": 135794,
+      "sha256": "78eb75191baaffd1282a1de96174594cea73d2457ee76c51adec4f1c4be33cd4"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0323_02.tif",
+      "size_bytes": 132408,
+      "sha256": "93459fa7b608f6a612862742a0ead1e8d3b7d40b70888ffb933738f595b5fb6e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0323_03.tif",
+      "size_bytes": 131848,
+      "sha256": "3ecaebd947b9cce66710eeef5a8676cbc58dd8ca44471ddf805a6ea5f2b6696c"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0335_01.tif",
+      "size_bytes": 135386,
+      "sha256": "0b9688d96bc0a928047cd74145ad1e5b90f85bab8ebb325c8462a0beef696168"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0336_01.tif",
+      "size_bytes": 134599,
+      "sha256": "a5f2dd37fb624d1368d5602760cdf7c9b220418e681b0c14d63621c0921882e7"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0347_01.tif",
+      "size_bytes": 134183,
+      "sha256": "d5f1ddef68705815197d4e970b5a0341e8bfcaa93795ced9a03aad6ba5c65823"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0348_01.tif",
+      "size_bytes": 133091,
+      "sha256": "0a4c98298c0e156923ff311d6aaccc710cc7d6274f15413e10844c6976fb6fb5"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0352_01.tif",
+      "size_bytes": 133080,
+      "sha256": "bc24e065e156db6142eedf3b6786f4c90f913e089932b6d318eacc55ddcfe270"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0353_01.tif",
+      "size_bytes": 132422,
+      "sha256": "8c68364524693822e1a57d4b10fb6b442ba143cfc0386e773c2b0daf6bf9163e"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0358_01.tif",
+      "size_bytes": 132716,
+      "sha256": "52c159ae9baa80109fe38c0ef037cca9a31613b17bc87f69c3667b238ba64eb0"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0361_01.tif",
+      "size_bytes": 135301,
+      "sha256": "e8019bb9e8ce62ca82e71c3bdc39612c310d19acc5389362ccd88d884fc0cdbb"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0362_01.tif",
+      "size_bytes": 132904,
+      "sha256": "88f0ad55b9528fb7ad9eebc4e1ad7a5c6a162fc88731adf49475b9fe3cfc32f6"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0368_01.tif",
+      "size_bytes": 135625,
+      "sha256": "3dbc6c32a71656bde471646dbf0b37377130ce6218de6f1d5f0ec2c5c1957988"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0369_01.tif",
+      "size_bytes": 136675,
+      "sha256": "9b948735d347f6c7d35bff416962de2b52404b8704611859f28a7e8e9e9e4d70"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0378_01.tif",
+      "size_bytes": 126755,
+      "sha256": "d2eb4a467f09c6cb7e4a6b67ca6f09b1873fd6a408b4a7c14464729065961e14"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0379_01.tif",
+      "size_bytes": 129138,
+      "sha256": "462fc9e75955a6fc8af6b87439a28c564df3c3f3f104ceaf1e17007eac68c87f"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0385_01.tif",
+      "size_bytes": 135850,
+      "sha256": "ae1ff0a423d39bd199100028f78c9e0bb320233bc3d45bdd028a8bf80e376c01"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0390_01.tif",
+      "size_bytes": 132588,
+      "sha256": "9a18ad47f51132d33e3bb6ec2c36836c8abe87b878940950bce6bab209e816e3"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0394_01.tif",
+      "size_bytes": 127414,
+      "sha256": "e04fcb9105499dd453bd865785a6c1a8a99e08a7c00a77359e1c56e0c22fb6d1"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0395_01.tif",
+      "size_bytes": 135665,
+      "sha256": "5067053800096dab2663998e8379a5ba6d1d03b013f2fb7b5403e820aa41d2e4"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0401_01.tif",
+      "size_bytes": 133984,
+      "sha256": "413f4050fc52a25ba92ca33ad831f817cce32f3a5721a81a731d2b7b27b625af"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0408_01.tif",
+      "size_bytes": 135298,
+      "sha256": "b7ce53e38b0b380198556501cb30bbbaa26787462cef3b6099ef7b32d3b12101"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0418_01.tif",
+      "size_bytes": 127676,
+      "sha256": "f547da1e001bc433e6c6b54807834ab998a4ff37602ae0e3bd50f651267f4fb9"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0424_01.tif",
+      "size_bytes": 138614,
+      "sha256": "d17976ffe6b39f26466e1522264426b6c44ca30a5cc6681321df8ddd37b56e90"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0425_01.tif",
+      "size_bytes": 130375,
+      "sha256": "7e8bdbffbc0df8ac39a5a3b00feba987845d84339ed039e9ca9acfbc906398be"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0430_01.tif",
+      "size_bytes": 127713,
+      "sha256": "220d499baaac94e41d173f3b68d802da43c7270a4b612eacb4b7d6dee0e21e56"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0432_01.tif",
+      "size_bytes": 134236,
+      "sha256": "a5335d21c111fea5d855211e07cbc4fecdfa379e3628274ae0335e8e8212e984"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2022_POS_C0433_01.tif",
+      "size_bytes": 130507,
+      "sha256": "3d918de80da97f1d81cc0c298ac52ff3ba094afda65d7383603462a2b58cdb15"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2023_POS_C0446_01.tif",
+      "size_bytes": 132915,
+      "sha256": "3553b132fa2b74b39146918e8bd0e7adfaf9a7016c57dc3f74cc61d4578198f4"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2023_POS_C0450_01.tif",
+      "size_bytes": 130842,
+      "sha256": "1fdc8289da7ca768f6d2944ea2c5407f904b90f674b16026a004c0754423668c"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2023_POS_C0459_01.tif",
+      "size_bytes": 130161,
+      "sha256": "5da9120658dc996164a3f31e8cebb7c34149422cb1bf68be4a6b2778f5b9a78d"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2023_POS_C0469_01.tif",
+      "size_bytes": 133498,
+      "sha256": "54d36badabb31b24ef5dbfa37336f835cbf321fdf481252120e37a684c40f850"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2023_POS_C0477_01.tif",
+      "size_bytes": 134539,
+      "sha256": "b6f9494f033da242344a2fdc088bcdf896368d797d58f7c702249aa674707f38"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2023_POS_C0482_01.tif",
+      "size_bytes": 126925,
+      "sha256": "11567d76d35776cf4c43be8df7e09091928c0816e285e66ee85ea4a086d810be"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2023_POS_C0484_01.tif",
+      "size_bytes": 133772,
+      "sha256": "0165327a5325a2b89e66b818629fd2b33610f5438ade5dc940ee724e5091a365"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2023_POS_C0498_01.tif",
+      "size_bytes": 135061,
+      "sha256": "98d717c74d056fc87d02b2570ae44761174ae6b35ef5ea32c17bc289a5c0a14a"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2024_POS_C0500_01.tif",
+      "size_bytes": 133955,
+      "sha256": "0433734e6653d48d68cf243fe8854916c668edd8c3e2d6d7681feabf5b15f5e1"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2024_POS_C0503_01.tif",
+      "size_bytes": 135646,
+      "sha256": "d57c2a4bdcf44dd605b03d5afd03eadab32102f8a4ebe38538a495ac6503583d"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2024_POS_C0506_01.tif",
+      "size_bytes": 133619,
+      "sha256": "d5d60fcc5358be3c147aa17119b940e4c755864eb36d4eaa968ba32ac7da45c8"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2024_POS_C0513_01.tif",
+      "size_bytes": 132854,
+      "sha256": "1866e4bca7f97f6f83f03e7a211a08fad9fdfb718921a48d5ec125334159f778"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2024_POS_C0515_01.tif",
+      "size_bytes": 129805,
+      "sha256": "7a5d3307cb5ee887b0b5244cc5caef4817ccde8217d2925c8caeaf2d4a8b6825"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2024_POS_C0520_01.tif",
+      "size_bytes": 132621,
+      "sha256": "cfab527b6d4866d14d5040804a141457a02fcff00f1d5ec0790fd1874271e2ba"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2024_POS_C0529_01.tif",
+      "size_bytes": 129124,
+      "sha256": "e6de3fb283e3ea4f68f24c22afafee24140cb2a83fdda5c8503b1189f68607c5"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2024_POS_C0534_01.tif",
+      "size_bytes": 124864,
+      "sha256": "1b5bf773b7d1d3068aaeb6785dfa771f3357469767eb256ed79a9753db5328a6"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2024_POS_C0547_01.tif",
+      "size_bytes": 136037,
+      "sha256": "06025be35246a9422c2de72332c96d26198c90d03a486580abe1cfe183679412"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0552_01.tif",
+      "size_bytes": 134458,
+      "sha256": "531374d081893c5d4e3ac9a90aeb1d8fcfaa3a5d13a7994f54aaa2cbf7475e06"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0564_01.tif",
+      "size_bytes": 130231,
+      "sha256": "7c36f8c001b4e12166577d905b8970bb478f7b435bc90d2c9be35af4372877e7"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0566_01.tif",
+      "size_bytes": 133957,
+      "sha256": "12e5fdc1d7815234308078ba6fefedde3b7ee2dcfa925b36b67517977cb2c859"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0567_01.tif",
+      "size_bytes": 138544,
+      "sha256": "fc0012275e438d243b65bfeaf34ace65f17cb5d8d12a972b07c701f8ab6def70"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0567_02.tif",
+      "size_bytes": 130825,
+      "sha256": "425440f5a3c4372be91a91e2f9c1b8daf783bc8df755aca674f72cf75e3fd31c"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0567_03.tif",
+      "size_bytes": 133019,
+      "sha256": "b707405758e108123e42951cb3c2633c3e65040c571b3ab0d919463bd0a93d9a"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0567_04.tif",
+      "size_bytes": 131043,
+      "sha256": "0c69e3111a9f5d7b1135dee5aff6fbf2c983e087311f7e1a05cce66625711416"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0567_05.tif",
+      "size_bytes": 137065,
+      "sha256": "b877c4feb63705b3e5ad76f19702b6e91c9980d4cab0441640a54ddfc17c1e94"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0567_06.tif",
+      "size_bytes": 135661,
+      "sha256": "00b9ee03442782d7f62a73fa79418f8c094b129d31f52abd4ad07e14cc38587d"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0575_01.tif",
+      "size_bytes": 134561,
+      "sha256": "72bae62e61318d46897bf9b2b665a8108c9d51ff55d9693174f7a12bd4417191"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0577_01.tif",
+      "size_bytes": 135170,
+      "sha256": "cd68ac92ce4f35c944db06d14a477d210b29e1dcca9d75869876b2b03cb16422"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0588_01.tif",
+      "size_bytes": 137473,
+      "sha256": "e5f199077b41936c205728ddeb2e47c08cb498cca33a82a31efb6453f79f288b"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0593_01.tif",
+      "size_bytes": 135142,
+      "sha256": "54b1eb631ae80e48035e2dfca8a39af713678b9be23ce991666b3434ed8c1d6c"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0596_01.tif",
+      "size_bytes": 134671,
+      "sha256": "b5af1a744c3dec0d2d036b37f298b34e9cec51bdfe13f8b4f81252fdcf905529"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0598_01.tif",
+      "size_bytes": 131837,
+      "sha256": "c71399428a24925136fa1419661b48845e54c570773062e41c3e5b7d5ec46e6a"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0600_01.tif",
+      "size_bytes": 132770,
+      "sha256": "61ea8266aeb26a27a99f7a22e994619aa1cbefe0e234b744ce19b4ad429027ae"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0618_01.tif",
+      "size_bytes": 135307,
+      "sha256": "2fceee1b7b31febe2f37ecf4e416860c1c79b0f10b4864b3edca38432edf0ede"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0621_01.tif",
+      "size_bytes": 135980,
+      "sha256": "34222168d89de95a1f34b5adbfccab29e3a0bbdc8017144d9dcf9343963ae9ee"
+    },
+    {
+      "path": "data/patches/sentinel_8ch/model8__test__pos__P_2025_POS_C0623_01.tif",
+      "size_bytes": 138116,
+      "sha256": "a4db3bcd0cf9e0e7a42b0dbf271b03b9b39f561a53bc5f5302d7a7be9e1521b8"
+    }
+  ]
+}

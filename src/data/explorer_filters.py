@@ -11,6 +11,20 @@ class ExplorerFilterError(Exception):
     """
 
 
+def get_reference_date_bounds(
+    points: pd.DataFrame,
+    season_year: int | None = None,
+) -> tuple[date, date]:
+    """Obtiene las fechas disponibles de la temporada (o de todo el test)."""
+    selected = points if season_year is None else points.loc[
+        points["season_year"] == int(season_year)
+    ]
+    dates = pd.to_datetime(selected["fecha_referencia"], errors="coerce").dropna()
+    if dates.empty:
+        raise ExplorerFilterError("No hay fechas de referencia para la temporada.")
+    return dates.min().date(), dates.max().date()
+
+
 def apply_explorer_filters(
     points: pd.DataFrame,
     *,

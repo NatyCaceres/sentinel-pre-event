@@ -9,6 +9,7 @@ from streamlit_folium import st_folium
 
 from src.data.explorer_filters import (
     apply_explorer_filters,
+    get_reference_date_bounds,
 )
 from src.data.explorer_selection import (
     get_available_group_ids,
@@ -41,10 +42,7 @@ from src.spectral.storage import (
     SpectralStorageError,
     resolve_patch_tif,
 )
-from src.spectral.visualization import (
-    SpectralVisualizationError,
-    prepare_rgb,
-)
+from src.ui.spectral_preview import render_spectral_preview
 from src.ui.styles import (
     apply_app_styles,
 )
@@ -173,13 +171,10 @@ test_catalog = select_final_test_catalog(
 )
 
 
-# Solo el mapa necesita correspondencia territorial resuelta.
-mapped_catalog = test_catalog[
-    test_catalog["map_eligible"]
-].copy()
-
-all_points = build_map_points(
-    mapped_catalog
+# Filtrar primero el test completo conserva los casos sin ubicación.
+all_points = build_map_points(test_catalog)
+all_points["map_eligible"] = all_points["patch_id"].isin(
+    test_catalog.loc[test_catalog["map_eligible"], "patch_id"]
 )
 
 
@@ -208,24 +203,6 @@ region_options = sorted(
     .tolist()
 )
 
-reference_dates = pd.to_datetime(
-    all_points["fecha_referencia"],
-    errors="coerce",
-)
-
-minimum_reference_date = (
-    reference_dates
-    .min()
-    .date()
-)
-
-maximum_reference_date = (
-    reference_dates
-    .max()
-    .date()
-)
-
-
 # ============================================================
 # BARRA LATERAL DE EXPLORACIÓN
 # ============================================================
@@ -245,21 +222,26 @@ with st.sidebar:
         "puedes buscar una muestra específica."
     )
 
+    # Fuera del formulario: las fechas deben reaccionar a la temporada.
+    selected_season_label = st.selectbox(
+        "Temporada",
+        options=["Todas"] + list(season_labels.keys()),
+        index=0,
+        key="query_season",
+    )
+    minimum_reference_date, maximum_reference_date = get_reference_date_bounds(
+        all_points, season_labels.get(selected_season_label)
+    )
+    if st.session_state.get("date_bounds_season") != selected_season_label:
+        st.session_state["query_dates"] = (
+            minimum_reference_date, maximum_reference_date
+        )
+        st.session_state["date_bounds_season"] = selected_season_label
+
     with st.form(
         "explorer_query_form",
         border=False,
     ):
-
-        selected_season_label = st.selectbox(
-            "Temporada",
-            options=[
-                "Todas"
-            ] + list(
-                season_labels.keys()
-            ),
-            index=0,
-            key="query_season",
-        )
 
         selected_region = st.selectbox(
             "Región",
@@ -295,6 +277,11 @@ with st.sidebar:
                 min_value=minimum_reference_date,
                 max_value=maximum_reference_date,
                 key="query_dates",
+            )
+            st.caption(
+                "Fechas disponibles en la temporada: "
+                f"{minimum_reference_date:%d-%m-%Y} a "
+                f"{maximum_reference_date:%d-%m-%Y}."
             )
 
             multipatch_only = st.checkbox(
@@ -432,7 +419,7 @@ else:
 # FILTRADO
 # ============================================================
 
-points = apply_explorer_filters(
+filtered_samples = apply_explorer_filters(
     all_points,
     season_year=selected_season_year,
     region=region_filter,
@@ -441,6 +428,7 @@ points = apply_explorer_filters(
     reference_end=reference_end,
     multipatch_only=multipatch_only,
 )
+points = filtered_samples.loc[filtered_samples["map_eligible"]].copy()
 
 
 # ============================================================
@@ -471,7 +459,6 @@ with st.container():
         st.markdown(
             '<div class="validated-status">'
             '🟢 Análisis espectral del terreno<br>'
-            f'{len(test_catalog)} parches · 8 canales'
             '</div>',
             unsafe_allow_html=True,
         )
@@ -488,10 +475,12 @@ with st.container():
         unsafe_allow_html=True,
     )
 
+    st.caption("Prototipo de exploración y revisión experimental")
+
     st.markdown(
         '<div class="product-subtitle">'
-        'Filtra el test final, selecciona un punto del mapa '
-        'y analiza su patrón espectral pre-evento.'
+        'Explora las muestras del conjunto de prueba, consulta sus antecedentes '
+        'y reproduce la clasificación del modelo seleccionado.'
         '</div>',
         unsafe_allow_html=True,
     )
@@ -664,8 +653,8 @@ with st.container():
                 <div class="sample-profile__facts">
                     <div><span>Temporada</span><strong>{escape(season_label)}</strong></div>
                     <div><span>Fecha de referencia</span><strong>{escape(format_date(selected_patch['fecha_referencia']))}</strong></div>
-                    <div><span>Objetivo pre-evento</span><strong>{escape(format_date(selected_patch['fecha_objetivo_pre_evento']))}</strong></div>
-                    <div><span>Imagen Sentinel-2</span><strong>{escape(format_date(selected_patch['fecha_imagen_seleccionada']))}</strong></div>
+                    <div><span>Fecha objetivo pre-evento</span><strong>{escape(format_date(selected_patch['fecha_objetivo_pre_evento']))}</strong></div>
+                    <div><span>Fecha de adquisición Sentinel-2</span><strong>{escape(format_date(selected_patch['fecha_imagen_seleccionada']))}</strong></div>
                     <div><span>Píxeles válidos</span><strong>{escape(format_percent(selected_patch['pct_pixeles_validos_patch']))}</strong></div>
                     <div><span>Grupo</span><strong>{escape(str(selected_patch['group_id']))}</strong></div>
                 </div>
@@ -676,53 +665,9 @@ with st.container():
             unsafe_allow_html=True,
         )
 
-        with st.container(key="rgb_preview_panel"):
-
-            with st.expander(
-                "Ver imagen RGB del parche seleccionado"
-            ):
-
-                if spectral_patch is None:
-
-                    st.error(
-                        "No fue posible cargar la imagen "
-                        "del parche seleccionado."
-                    )
-                    st.caption(str(spectral_patch_error))
-
-                else:
-
-                    try:
-
-                        rgb_image = prepare_rgb(spectral_patch)
-                        image_column, note_column = st.columns(
-                            [1, 2],
-                            gap="large",
-                            vertical_alignment="center",
-                        )
-
-                        with image_column:
-                            st.image(
-                                rgb_image,
-                                width=256,
-                            )
-
-                        with note_column:
-                            st.caption("VISUALIZACIÓN COMPLEMENTARIA")
-                            st.subheader("RGB natural")
-                            st.write("Composición Sentinel-2 B4/B3/B2.")
-                            st.caption(
-                                "El contraste percentil 2–98 se aplica "
-                                "solo para visualización y no forma parte "
-                                "del preprocesamiento del modelo."
-                            )
-
-                    except SpectralVisualizationError as error:
-
-                        st.error(
-                            "No fue posible construir la vista RGB."
-                        )
-                        st.caption(str(error))
+        # Conserva la posición visual; se llena después de procesar inferencia
+        # para que el botón Grad-CAM se habilite en esa misma ejecución.
+        spectral_preview = st.container(key="rgb_preview_panel")
 
         st.write("")
 
@@ -765,6 +710,7 @@ with st.container():
 
             if analyze_patch:
 
+                st.session_state.pop("spectral_gradcam", None)
                 st.session_state.pop(
                     prediction_state_key,
                     None,
@@ -785,6 +731,7 @@ with st.container():
                     st.session_state[prediction_state_key] = {
                         "patch_id": str(selected_patch["patch_id"]),
                         "prediction": prediction,
+                        "model_sha256": loaded_model.contract["model"]["checkpoint_sha256"],
                     }
 
                 except (
@@ -844,6 +791,7 @@ with st.container():
                         <div class="prediction-result__title">
                             {escape(predicted_label)}
                         </div>
+                        <p>Probabilidades de clase estimadas por el modelo</p>
                         <div class="probability-row">
                             <div class="probability-row__label">
                                 <span>Clase 0 · Sin detección cercana</span>
@@ -870,6 +818,10 @@ with st.container():
                     unsafe_allow_html=True,
                 )
                 st.caption(
+                    "Estos porcentajes no representan probabilidad de "
+                    "ocurrencia de incendio."
+                )
+                st.caption(
                     "Decisión obtenida con el umbral "
                     f"congelado de validación "
                     f"({prediction.threshold:.3f})."
@@ -890,44 +842,31 @@ with st.container():
                     unsafe_allow_html=True,
                 )
 
+        with spectral_preview:
+            render_spectral_preview(
+                spectral_patch,
+                current_patch_id,
+                prediction_state,
+                load_cached_spectral_model,
+                error=spectral_patch_error,
+            )
+
         st.stop()
 
 
     # --------------------------------------------------------
-    # SIN RESULTADOS
+    # CONTEOS DE LA CONSULTA, INCLUIDOS LOS CASOS SIN UBICACIÓN
     # --------------------------------------------------------
 
-    if points.empty:
+    test_positive = int((filtered_samples["etiqueta"] == 1).sum())
+    test_negative = int((filtered_samples["etiqueta"] == 0).sum())
+    unmapped_test = filtered_samples.loc[~filtered_samples["map_eligible"]]
 
-        st.warning(
-            "No existen muestras que cumplan "
-            "la combinación de filtros seleccionada."
+    if not unmapped_test.empty:
+        unmapped_details = "; ".join(
+            f"{row.patch_id} (clase {int(row.etiqueta)})"
+            for row in unmapped_test.itertuples(index=False)
         )
-
-        st.stop()
-
-
-    # --------------------------------------------------------
-    # MÉTRICAS
-    # --------------------------------------------------------
-
-    visible_positive = int(
-        (
-            points["etiqueta"] == 1
-        ).sum()
-    )
-
-    visible_negative = int(
-        (
-            points["etiqueta"] == 0
-        ).sum()
-    )
-
-    visible_groups = int(
-        points["group_id"].nunique()
-    )
-
-
     # ========================================================
     # MAPA PRINCIPAL
     # ========================================================
@@ -946,7 +885,7 @@ with st.container():
         )
 
         st.caption(
-            "Acércate a un grupo y selecciona un punto para "
+            "Acércate a una agrupación de puntos y selecciona uno para "
             "revisar su muestra."
         )
 
@@ -957,35 +896,33 @@ with st.container():
                 '<span><i class="legend-dot legend-dot--negative"></i>'
                 'Sin detección cercana</span>'
                 '<span><i class="legend-dot legend-dot--cluster"></i>'
-                'Grupo de muestras</span>'
+                'Agrupación de puntos</span>'
             )
         elif class_filter == "Con detección posterior":
             legend_items = (
                 '<span><i class="legend-dot legend-dot--positive"></i>'
                 'Con detección posterior</span>'
                 '<span><i class="legend-dot legend-dot--cluster"></i>'
-                'Grupo de muestras</span>'
+                'Agrupación de puntos</span>'
             )
         else:
             legend_items = (
                 '<span><i class="legend-dot legend-dot--negative"></i>'
                 'Sin detección cercana</span>'
                 '<span><i class="legend-dot legend-dot--cluster"></i>'
-                'Grupo de muestras</span>'
+                'Agrupación de puntos</span>'
             )
 
-        st.markdown(
+        st.html(
             dedent(
                 f"""
                 <div class="map-context-bar">
                     <div class="map-context-bar__count">
-                        <strong>{len(points):,}</strong> muestras
+                        <strong>Consulta actual</strong>
                         <span>·</span>
-                        <strong>{visible_groups:,}</strong> grupos
+                        {test_positive:,} clase 1
                         <span>·</span>
-                        {visible_positive:,} clase 1
-                        <span>·</span>
-                        {visible_negative:,} clase 0
+                        {test_negative:,} clase 0
                     </div>
                     <div class="map-context-bar__legend">
                         {legend_items}
@@ -993,13 +930,18 @@ with st.container():
                 </div>
                 """
             ),
-            unsafe_allow_html=True,
         )
-
 
         # ----------------------------------------------------
         # MAPA
         # ----------------------------------------------------
+
+        if points.empty:
+            st.warning(
+                "No existen muestras cartografiables que cumplan "
+                "la combinación de filtros seleccionada."
+            )
+            st.stop()
 
         map_object = build_phase1_folium_map(
             points=points,

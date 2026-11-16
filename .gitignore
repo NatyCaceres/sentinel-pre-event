@@ -26,6 +26,9 @@ __pycache__/
 *.pth
 *.ckpt
 
+# PAQUETE LOCAL DE DESPLIEGUE Y DESCARGAS TEMPORALES
+.cloud/
+
 # SISTEMA OPERATIVO
 .DS_Store
 Thumbs.db

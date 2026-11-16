@@ -38,6 +38,44 @@ class SpectralVisualizationError(Exception):
     """
 
 
+def colorize_gradcam(heatmap: np.ndarray) -> np.ndarray:
+    """Escala visual fija violeta–amarillo para intensidades relativas [0, 1]."""
+    values = np.asarray(heatmap, dtype=np.float32)
+    if values.ndim != 2 or not np.isfinite(values).all():
+        raise SpectralVisualizationError("El mapa Grad-CAM debe ser bidimensional y finito.")
+    if values.size == 0 or values.min() < 0 or values.max() > 1:
+        raise SpectralVisualizationError("El mapa Grad-CAM debe estar entre 0 y 1.")
+    # Paleta explícita y versionada: no depende de librerías gráficas externas.
+    colors = np.asarray([
+        (0.001, 0.000, 0.014), (0.113, 0.065, 0.277),
+        (0.317, 0.072, 0.485), (0.512, 0.148, 0.508),
+        (0.716, 0.215, 0.475), (0.902, 0.365, 0.384),
+        (0.987, 0.536, 0.382), (0.997, 0.733, 0.505),
+        (0.987, 0.991, 0.750),
+    ], dtype=np.float32)
+    positions = np.linspace(0, 1, len(colors))
+    return np.stack([
+        np.interp(values, positions, colors[:, channel])
+        for channel in range(3)
+    ], axis=-1).astype(np.float32)
+
+
+def prepare_gradcam_overlay(
+    rgb: np.ndarray,
+    heatmap: np.ndarray,
+    *,
+    alpha: float = 0.46,
+) -> np.ndarray:
+    """Superpone el mapa sin modificar ni renormalizar las entradas."""
+    colors = colorize_gradcam(heatmap)
+    rgb = np.asarray(rgb, dtype=np.float32)
+    if rgb.shape != colors.shape or not np.isfinite(rgb).all():
+        raise SpectralVisualizationError("RGB y Grad-CAM deben tener dimensiones compatibles.")
+    if not 0 <= alpha <= 1 or np.any((rgb < 0) | (rgb > 1)):
+        raise SpectralVisualizationError("RGB y opacidad deben estar entre 0 y 1.")
+    return ((1 - alpha) * rgb + alpha * colors).astype(np.float32)
+
+
 def percentile_stretch(
     channel: np.ndarray,
     *,

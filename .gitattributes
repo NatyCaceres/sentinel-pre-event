@@ -1,0 +1,6 @@
+# Conservar los bytes auditados en Windows y Linux. Los hashes de integridad
+# incluyen los saltos de linea; estos archivos no deben seguir core.autocrlf.
+/data/metadata/product/product_catalog.csv text eol=crlf
+/data/metadata/product/product_catalog_manifest.json text eol=crlf
+/config/spectral_contract.json text eol=crlf
+/artifacts/models/resnet18_8ch_v2/runtime/inference_contract.json text eol=lf

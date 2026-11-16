@@ -197,7 +197,7 @@ python -m pytest -q
 Resultado de referencia actual:
 
 ```text
-121 passed, 7 warnings
+166 passed, 7 warnings
 ```
 
 ## Reproducir la evaluación cerrada
@@ -217,6 +217,10 @@ Resultado: COINCIDE
 
 ## Ejecutar la aplicación
 
+La preparación para Community Cloud y los pasos pendientes están documentados
+en [docs/cloud_deployment.md](docs/cloud_deployment.md). El perfil Linux está en
+`app/requirements.txt`; no sustituye al entorno local de Windows.
+
 ```powershell
 python -m streamlit run app/app.py
 ```
@@ -224,6 +228,31 @@ python -m streamlit run app/app.py
 La inferencia se ejecuta localmente en el proceso Python de Streamlit. El modelo
 se mantiene en caché durante la sesión para evitar cargarlo nuevamente en cada
 interacción.
+
+## Explicación visual con Grad-CAM
+
+En «Analizar muestra», primero pulsa «Analizar patrón espectral». Después abre
+«Ver imagen RGB y explicación visual del parche» y pulsa «Generar explicación
+visual». Se muestran RGB, Grad-CAM y su superposición, con una escala relativa
+de 0 a 1. Se explica la clase asignada con el umbral congelado 0,495, aunque
+difiera de la clase observada.
+
+El cálculo reutiliza el checkpoint y el preprocesamiento de inferencia de los
+ocho canales. Usa el logit de la clase elegida y la salida de `layer2.1`
+(`layer2[-1]`): media espacial de gradientes, suma ponderada, ReLU,
+interpolación bilineal a 64 × 64 (`align_corners=False`) y min-max por parche.
+La resolución original es 8 × 8; ampliar el mapa no añade precisión espacial.
+Los mapas constantes se muestran como ceros y se identifican en la interfaz.
+
+El RGB conserva su contraste percentil 2–98 exclusivamente visual. La paleta
+violeta–amarillo está definida en el código y la opacidad de superposición es
+0,46. No se reentrena ni se modifican pesos, gradientes de parámetros o el
+umbral. Los resultados permanecen en memoria de la sesión y se invalidan al
+cambiar la muestra, sus datos o la predicción; no se guardan imágenes en disco.
+
+Grad-CAM es un apoyo cualitativo para revisar la clasificación. No representa
+probabilidad de incendio por píxel, no delimita áreas quemadas y sus intensidades
+normalizadas no son comparables en términos absolutos entre parches.
 
 ## Estructura principal
 
