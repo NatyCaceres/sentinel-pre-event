@@ -821,11 +821,6 @@ with st.container():
                     "Estos porcentajes no representan probabilidad de "
                     "ocurrencia de incendio."
                 )
-                st.caption(
-                    "Decisión obtenida con el umbral "
-                    f"congelado de validación "
-                    f"({prediction.threshold:.3f})."
-                )
                 st.markdown(
                     dedent(
                         """
